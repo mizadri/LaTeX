@@ -42,6 +42,7 @@
 \usepackage{color}
 \usepackage{caption}
 \makeindex
+\graphicspath{{./img/}}
 
 \begin{document}
 \renewcommand\indexname{Índice}
@@ -116,10 +117,22 @@ Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuesto
 Durante la conferencia, se hizo especial hincapié en las necesidades de los clientes y las características que estos exigen en una aplicación cloud. Los requisitos más destacados son los siguientes:
 
 \begin{itemize}
-\item \textbf{Tiempo rápido de despliegue}. Uno de los problemas más extendidos en el ámbito de las aplicaciones empresariales de elevada complejidad es que la aplicación puede tener complejas dependencias entre librerías y resulta díficil hacer un despliegue limpio y sin errores. Se ponía como ejemplo el clásico problema de que en el entorno de desarrollo funciona todo perfectamente, pero cuando se traslada a producción deja de hacerlo y cada equipo le echa la culpa a otro.
-\item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
 \item \textbf{Fiabilidad}. El funcionamiento de las aplicaciones web está íntimamente relacionado con la imágen que las grandes empresas tienen en la sociedad, si una tienda de comercio electrónico se cae durante una hora puede suponer pérdidas millonarias para la empresa y acarrea el riesgo de que sus clientes dejen de confiar en ella y pasarse a la competencia. Debido a esto, los clientes esperan que su aplicación tenga el mínimo número de errores posibles. Uno de los aspectos más importantes en este sentido es que se haga un proceso meticuloso de \emph{testing} y validación antes de publicar una aplicación, priorizando las partes más críticas del sistema y que pueden suponer un cuello de botella para la misma.
-\item \textbf{Recuperación instantánea ante fallos}(\emph{Zero Down Time}). En caso de que la aplicación llegue a fallar, lo que es imposible de evitar al completo, es necesario minimizar este tiempo en el que no se provee un servicio. 
+\item \textbf{Recuperación instantánea ante fallos} (\emph{Zero Down Time}\cite{zdwt}). En caso de que la aplicación llegue a fallar, lo que es imposible de evitar al completo, es necesario minimizar el tiempo en el que no se provee un servicio. Asegurar un tiempo mínimo de recuperación supone un desafío importante cuando una máquina física actúa como el punto de fallo único de la aplicación. Sin embargo, el hecho de tener una aplicación desplegada en contenedores virtuales, nos facilita en gran medida asegurar un sistema tolerante a fallos. Este sistema debe constar de ciertas características, entre las que se destacan:
+\begin{itemize}
+\item Disponer de un cluster de máquinas configurado.
+\item Aplicar técnicas de replicación y balanceo de carga.
+\item Tener montado un volumen compartido de datos que permita a diferentes máquinas acceder a las imágenes que utilizan las máquinas virtuales.
+\end{itemize}
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{spof.png}
+\caption{\label{fig:zerodt}Esquema de recuperación ante fallos.}
+\end{figure}
+Cómo se puede observar en la Fgura~\ref{fig:zerodt}, cuando el servidor físico A falla, se desencadena una migración del contenedor virtual al servidor B. Lo que debería ocurrir sin problema en caso de que el volumen de datos compartido por red siga disponible y solo haya ocurrido un problema aislado en la máquina A.
+
+\item \textbf{Tiempo rápido de despliegue}. Uno de los problemas más extendidos en el ámbito de las aplicaciones empresariales de elevada complejidad es que la aplicación puede tener muchas dependencias entre diferentes componentes, lo que hace díficil realizar un despliegue limpio y sin errores. Se ponía como ejemplo el clásico problema de que en el entorno de desarrollo funciona todo perfectamente, pero cuando se traslada a producción deja de hacerlo y cada equipo le echa la culpa a otro.
+\item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
 \end{itemize}
 
 
@@ -153,6 +166,7 @@ Durante la conferencia, se hizo especial hincapié en las necesidades de los cli
 \begin{thebibliography}{1}
 %\bibitem{key} description. \href{https://...}{Enlace}
 \bibitem{reliab}Fundaments of Cloud Service Reliability, Microsoft Secure Blog. \href{https://blogs.microsoft.com/microsoftsecure/2012/09/12/fundamentals-of-cloud-service-reliability/}{Enlace}.
+\bibitem{zdwt}Zero Downtime, CloudPatterns.org. \href{http://cloudpatterns.org/design_patterns/zero_downtime}{Enlace}
 \end{thebibliography}
 
 \end{document}
