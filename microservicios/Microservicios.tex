@@ -38,7 +38,7 @@
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{makeidx}
-\usepackage{hyperref}
+\usepackage[colorlinks=true,linkcolor=black,anchorcolor=black,citecolor=black,filecolor=black,menucolor=black,runcolor=black,urlcolor=blue]{hyperref}
 \usepackage{color}
 \usepackage{caption}
 \makeindex
@@ -56,7 +56,6 @@
 %----------------------------------------------------------------------------------------
 
 \textsc{\LARGE Facultad de Informática}\\[1.5cm] % Name of your university/college
-\textsc{\Large Universidad Complutense de Madrid}\\[0.5cm] % Major heading such as course name
 \textsc{\large Adrián García García}\\[0.5cm] % Minor heading such as course title
 
 %----------------------------------------------------------------------------------------
@@ -98,9 +97,9 @@
 % Include image from images directory
 \begin{figure}[h]
 
-        \includegraphics[width=3cm,keepaspectratio]{cc-by-sa.png}
+        \includegraphics[width=2cm,keepaspectratio]{cc-by-sa.png}
         \label{fig:by-sa}
-        \caption{ This work is licensed under a {\color{blue}\href{https://creativecommons.org/licenses/by/4.0/legalcode}{CC-BY-SA 4.0 License}}.}
+        \caption{ This work is licensed under a \href{https://creativecommons.org/licenses/by/4.0/legalcode}{CC-BY-SA 4.0 License}.}
 
 \end{figure}
 
@@ -109,84 +108,51 @@
 \printindex
 
 \begin{abstract}
-Your abstract.
+Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuestos en una conferencia optativa que tuvo lugar durante la semana de la informática de 2017. Los ponentes fueron dos ingenieros de la empresa GMV (Ricardo de Castro y Roberto Galán). En concreto, el nombre de la conferencia era el siguiente: Despliegue automático de arquitecturas escalables basadas en microservicios sobre el Cloud de Google (23 de Febrero, 11-14 horas). Conviene puntualizar que al final no usaron el Cloud de Google, sino que se basaron en Amazon Web Services y Docker Swarm para desplegar una aplicación web que se basaba en el uso de microservicios para su funcionamiento.
 \end{abstract}
 
 \section{Introducción}\index{Introducción}
 
-Your introduction goes here! Some examples of commonly used commands and features are listed below, to help you get started.
+Durante la conferencia, se hizo especial hincapié en las necesidades de los clientes y las características que estos exigen en una aplicación cloud. Los requisitos más destacados son los siguientes:
 
-If you have a question, please use the support box in the bottom right of the screen to get in touch. 
-
-\section{Some \LaTeX{} Examples}
-\label{sec:examples}
-
-\subsection{Sections}\index{Section}
-
-Use section and subsection commands to organize your document. \LaTeX{} handles all the formatting and numbering automatically. Use ref and label commands for cross-references.
-
-\subsection{Comments}
-
-Comments can be added to the margins of the document using the \todo{Here's a comment in the margin!} todo command, as shown in the example on the right. You can also add inline comments too:
-
-\todo[inline, color=green!40]{This is an inline comment.}
-
-\subsection{Tables and Figures}
-
-Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example. You can upload a figure (JPEG, PNG or PDF) using the files menu. To include it in your document, use the includegraphics command as in the code for Figure~\ref{fig:frog} below.
-
-% Commands to include a figure:
-\begin{figure}
-\centering
-\includegraphics[width=0.5\textwidth]{frog.jpg}
-\caption{\label{fig:frog}This is a figure caption.}
-\end{figure}
-
-\begin{table}
-\centering
-\begin{tabular}{l|r}
-Item & Quantity \\\hline
-Widgets & 42 \\
-Gadgets & 13
-\end{tabular}
-\caption{\label{tab:widgets}An example table.}
-\end{table}
-
-\subsection{Mathematics}
-
-\LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
-$$S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-      = \frac{1}{n}\sum_{i}^{n} X_i$$
-denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
-
-\subsection{Lists}
-
-You can make lists with automatic numbering \dots
-
-\begin{enumerate}
-\item Like this,
-\item and like this.
-\end{enumerate}
-\dots or bullet points \dots
 \begin{itemize}
-\item Like this,
-\item and like this.
+\item \textbf{Tiempo rápido de despliegue}. Uno de los problemas más extendidos en el ámbito de las aplicaciones empresariales de elevada complejidad es que la aplicación puede tener complejas dependencias entre librerías y resulta díficil hacer un despliegue limpio y sin errores. Se ponía como ejemplo el clásico problema de que en el entorno de desarrollo funciona todo perfectamente, pero cuando se traslada a producción deja de hacerlo y cada equipo le echa la culpa a otro.
+\item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
+\item \textbf{Fiabilidad}. El funcionamiento de las aplicaciones web está íntimamente relacionado con la imágen que las grandes empresas tienen en la sociedad, si una tienda de comercio electrónico se cae durante una hora puede suponer pérdidas millonarias para la empresa y acarrea el riesgo de que sus clientes dejen de confiar en ella y pasarse a la competencia. Debido a esto, los clientes esperan que su aplicación tenga el mínimo número de errores posibles. Uno de los aspectos más importantes en este sentido es que se haga un proceso meticuloso de \emph{testing} y validación antes de publicar una aplicación, priorizando las partes más críticas del sistema y que pueden suponer un cuello de botella para la misma.
+\item \textbf{Recuperación instantánea ante fallos}(\emph{Zero Down Time}). En caso de que la aplicación llegue a fallar, lo que es imposible de evitar al completo, es necesario minimizar este tiempo en el que no se provee un servicio. 
 \end{itemize}
 
-We hope you find write\LaTeX\ useful, and please let us know if you have any feedback using the help menu above.
+
+%\subsection{Subsections}\index{Section}
+
+
+%\todo[inline, color=green!40]{This is an inline comment.}
+
+
+
+
+% -- FIGURE --
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.5\textwidth]{frog.jpg}
+%\caption{\label{fig:frog}This is a figure caption.}
+%\end{figure}
+
+% -- TABLE --
+%\begin{table}
+%\centering
+%\begin{tabular}{l|r}
+%Item & Quantity \\\hline
+%Widgets & 42 \\
+%Gadgets & 13
+%\end{tabular}
+%\caption{\label{tab:widgets}An example table.}
+%\end{table}
+
 
 \begin{thebibliography}{1}
-
-\bibitem{key} John Doe {\em Title and stuff}  2013.
-
-\bibitem{webp} [@misc{WinNT,
-  title = {{MS Windows NT} Kernel Description},
-  howpublished = {\url{http://web.archive.org/web/20080207010024/http://www.808multimedia.com/winnt/kernel.htm}},
-  note = {Accessed: 2010-09-30}
-}]
-
-\bibitem{bl}Business Logic layer, \url{http://en.wikipedia.org/wiki/Business_logic_layer}, 23 12 2011.
-
+%\bibitem{key} description. \href{https://...}{Enlace}
+\bibitem{reliab}Fundaments of Cloud Service Reliability, Microsoft Secure Blog. \href{https://blogs.microsoft.com/microsoftsecure/2012/09/12/fundamentals-of-cloud-service-reliability/}{Enlace}.
 \end{thebibliography}
 
 \end{document}
