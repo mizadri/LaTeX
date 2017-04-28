@@ -32,7 +32,7 @@
 %----------------------------------------------------------------------------------------
 
 \documentclass[12pt]{article}
-\usepackage[english]{babel}
+\usepackage[spanish]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -41,10 +41,14 @@
 \usepackage[colorlinks=true,linkcolor=black,anchorcolor=black,citecolor=black,filecolor=black,menucolor=black,runcolor=black,urlcolor=blue]{hyperref}
 \usepackage{color}
 \usepackage{caption}
+\usepackage{etoolbox}
+\newcommand{\icon}[1]{\includegraphics[height=20pt]{#1}}
+\robustify{\icon}
 \makeindex
 \graphicspath{{./img/}}
 
 \begin{document}
+
 \renewcommand\indexname{Índice}
 \begin{titlepage}
 
@@ -109,7 +113,7 @@
 \printindex
 
 \begin{abstract}
-Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuestos en una conferencia optativa que tuvo lugar durante la semana de la informática de 2017. Los ponentes fueron dos ingenieros de la empresa GMV (Ricardo de Castro y Roberto Galán). En concreto, el nombre de la conferencia era el siguiente: Despliegue automático de arquitecturas escalables basadas en microservicios sobre el Cloud de Google (23 de Febrero, 11-14 horas). Conviene puntualizar que al final no usaron el Cloud de Google, sino que se basaron en Amazon Web Services y Docker Swarm para desplegar una aplicación web que se basaba en el uso de microservicios para su funcionamiento.
+Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuestos en una conferencia optativa que tuvo lugar durante la semana de la informática de 2017. Los ponentes fueron dos ingenieros de la empresa GMV (Ricardo de Castro y Roberto Galán). En concreto, el nombre de la conferencia era el siguiente: Despliegue automático de arquitecturas escalables basadas en microservicios sobre el Cloud de Google (23 de Febrero, 11-14 horas). Conviene puntualizar que al final no usaron el Cloud de Google, sino que se basaron en Amazon Web Services y Docker Swarm para desplegar una aplicación web que se basaba en el uso de microservicios para su funcionamiento. Al mismo tiempo, hablaron de un concepto que está muy de moda últimamente como es el enfoque \emph{DevOps}, también está relacionado con el despliegue rápido y eficiente de código en la nube, la automatización de procesos de desarrollo (prototipado, \emph{testing}, despliegue, etc.) y las metodologías ágiles.
 \end{abstract}
 
 \section{Introducción}\index{Introducción}
@@ -130,17 +134,55 @@ Durante la conferencia, se hizo especial hincapié en las necesidades de los cli
 \caption{\label{fig:zerodt}Esquema de recuperación ante fallos.}
 \end{figure}
 Cómo se puede observar en la Fgura~\ref{fig:zerodt}, cuando el servidor físico A falla, se desencadena una migración del contenedor virtual al servidor B. Lo que debería ocurrir sin problema en caso de que el volumen de datos compartido por red siga disponible y solo haya ocurrido un problema aislado en la máquina A.
-
 \item \textbf{Tiempo rápido de despliegue}. Uno de los problemas más extendidos en el ámbito de las aplicaciones empresariales de elevada complejidad es que la aplicación puede tener muchas dependencias entre diferentes componentes, lo que hace díficil realizar un despliegue limpio y sin errores. Se ponía como ejemplo el clásico problema de que en el entorno de desarrollo funciona todo perfectamente, pero cuando se traslada a producción deja de hacerlo y cada equipo le echa la culpa a otro.
 \item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
 \end{itemize}
 
+\section{Arquitectura orientada a servicios}\index{Arquitectura orientada a servicios}
 
+Las aplicaciones monolíticas se despliegan como un solo bloque de frontend, lógica de negocio y acceso a datos. Si existe un cuello de botella en sólo un elemento del sistema necesitaríamos desplegar varias instancias de la aplicación completa  y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución mala, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
+
+El concepto de arquitectura orientada a servicios, comúnmente conocido como SOA (Service Oriented Architecture), trata de definir aplicaciones compartimentalizadas en paquetes que se despliegan de forma independiente.
+
+\subsection{Microservicios}\index{Microservicios}
 %\subsection{Subsections}\index{Section}
 
+Permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas…). Pueden ser atómicos o compuestos, que agrupan varios dominios.
 
+Desplegar suele resultar el paso más complicado en este tipo de aplicaciones que en las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que suelen presentar interdependencias y , por lo tanto, requieren que se realize un orden de arranque concreto.
+
+Existe una serie de servicios de código abierto que permiten gestionar los diferentes microservicios y las interacciones que presentan. Algunos de los más usados pertenecen al framework Spring Cloud de Netflix:
+\begin{itemize}
+\item Eureka: Service Discovery.
+\item Zuul: Proxy.
+\item Ribbon: Load Balancer.
+\end{itemize}
+
+
+
+\vspace{1cm}
+\section{Docker \icon{docker.png}}
+Es una tecnología de virtualización que permite definir aplicaciones autocontenidas. Se basa en contenedores que se ejecutan de forma virtual directamente sobre el Kernel Linux y otras plataformas. Estos contenedores incluyen todas las librerías y binarios necesarios para el despliegue de una aplicación.
+
+A diferencia de las máquinas virtuales convencionales, las tecnologías de contenedores como Docker permiten ahorrarse la interacción con el sistema operativo huésped(guest), es decir, Docker es capaz de realizar una interacción directa con el Kernel Linux de la máquina anfitrión(host).
+
+Algunas características destacadas sobre Docker en la conferencia son las siguientes: es portable, ligero, automatizable, autocontenido, aislado(ofrece entorno de desarrollo aislado que se comporta a modo de sandbox), agiliza el despliegue y el mantenimiento.
+
+Con muchos contenedores pueden aparecer problemas de coordinación, para solucionarlos se utilizan balanceadores o administradores. Algunos de los más conocidos son:
+\begin{itemize}
+\item Kubernetes (Google)
+\item Amazon Web Services ECS
+\item Docker Swarm
+\end{itemize}
+
+\section{DevOps}\index{Devops}
 %\todo[inline, color=green!40]{This is an inline comment.}
 
+Otro de los conceptos introducidos en la conferencia es el de DevOps(el término proviene del acrónimo inglés formado por Development y Operations), es un concepto que ha atraído un interés creciente en el ámbito de la gestión de proyectos y la ingeniería del Software durante la última década. Recibe una gran influencia de las metodologías ágiles de desarrollo y propone una mejora de la comunicación entre los equipos de desarrollo y operaciones. A lo largo de la historia, se ha producido un conflicto entre ambos equipos que surge de forma natural de sus roles, en el área de desarrollo se intenta introducir nueva funcionalidad mientras que el equipo de operaciones crea estabilidad y se ocupa de resolver errores. 
+
+Las técnicas de DevOps se basan en la creación de una cultura común entre ambos equipos, que se aproveche al máximo de la automatización de procesos, la obtención de métricas que permita guiar la toma de decisiones y la integración de ambos equipos de forma que participen en todo el ciclo de vida del proyecto(diseño, desarrollo, mantenimiento…).
+
+Una de las herramientas más utilizadas para automatizar las actividades del ciclo de vida del Software es Jenkins. Esta herramienta permite definir tareas para automatizar el proceso de compilación, testing, despliegue y recopilación de métricas. Otras herramientas que pueden de resultar de utilidad son SonarQube(Testing de calidad de código) y NexusOSS(Gestor de dependencias y artefactos).
 
 
 
