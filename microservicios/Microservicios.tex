@@ -30,7 +30,6 @@
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
-
 \documentclass[12pt]{article}
 \usepackage[spanish]{babel}
 \usepackage[utf8x]{inputenc}
@@ -42,7 +41,7 @@
 \usepackage{color}
 \usepackage{caption}
 \usepackage{etoolbox}
-\newcommand{\icon}[1]{\includegraphics[height=20pt]{#1}}
+\newcommand{\icon}[1]{\includegraphics[height=18pt]{#1}}
 \robustify{\icon}
 \makeindex
 \graphicspath{{./img/}}
@@ -110,46 +109,65 @@
 
 \end{titlepage}
 
-\printindex
+\tableofcontents
+\clearpage
 
 \begin{abstract}
-Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuestos en una conferencia optativa que tuvo lugar durante la semana de la informática de 2017. Los ponentes fueron dos ingenieros de la empresa GMV (Ricardo de Castro y Roberto Galán). En concreto, el nombre de la conferencia era el siguiente: Despliegue automático de arquitecturas escalables basadas en microservicios sobre el Cloud de Google (23 de Febrero, 11-14 horas). Conviene puntualizar que al final no usaron el Cloud de Google, sino que se basaron en Amazon Web Services y Docker Swarm para desplegar una aplicación web que se basaba en el uso de microservicios para su funcionamiento. Al mismo tiempo, hablaron de un concepto que está muy de moda últimamente como es el enfoque \emph{DevOps}, también está relacionado con el despliegue rápido y eficiente de código en la nube, la automatización de procesos de desarrollo (prototipado, \emph{testing}, despliegue, etc.) y las metodologías ágiles.
+Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuestos en una conferencia optativa que tuvo lugar durante la semana de la informática de 2017. Los ponentes fueron dos ingenieros de la empresa GMV (Ricardo de Castro y Roberto Galán). En concreto, el nombre de la conferencia era el siguiente: Despliegue automático de arquitecturas escalables basadas en microservicios sobre el Cloud de Google (23 de Febrero, 11-14 horas). Conviene puntualizar que al final no usaron la plataforma de Google, sino que se basaron en Amazon Web Services y Docker Swarm para desplegar una aplicación web que se basaba en el uso de microservicios para su funcionamiento. Al mismo tiempo, hablaron de un concepto que está muy de moda últimamente como es el enfoque \emph{DevOps}, también está relacionado con el despliegue rápido y eficiente de código en la nube, la automatización de procesos de desarrollo (\emph{testing}, recogida de métricas, despliegue, etc.) y las metodologías ágiles.
 \end{abstract}
 
-\section{Introducción}\index{Introducción}
+\section{Introducción}
 
-Durante la conferencia, se hizo especial hincapié en las necesidades de los clientes y las características que estos exigen en una aplicación cloud. Los requisitos más destacados son los siguientes:
+Durante la conferencia, se hizo especial hincapié en las necesidades de los clientes y las características que estos exigen en una aplicación de carácter empresarial que se ejecuta en la nube. Los requisitos más destacados son los siguientes:
 
 \begin{itemize}
-\item \textbf{Fiabilidad}. El funcionamiento de las aplicaciones web está íntimamente relacionado con la imágen que las grandes empresas tienen en la sociedad, si una tienda de comercio electrónico se cae durante una hora puede suponer pérdidas millonarias para la empresa y acarrea el riesgo de que sus clientes dejen de confiar en ella y pasarse a la competencia. Debido a esto, los clientes esperan que su aplicación tenga el mínimo número de errores posibles. Uno de los aspectos más importantes en este sentido es que se haga un proceso meticuloso de \emph{testing} y validación antes de publicar una aplicación, priorizando las partes más críticas del sistema y que pueden suponer un cuello de botella para la misma.
+\item \textbf{Fiabilidad}. El funcionamiento de las aplicaciones web está íntimamente relacionado con la imagen que las grandes empresas tienen en la sociedad, si una tienda de comercio electrónico se cae durante una hora puede suponer pérdidas millonarias para la empresa y acarrea el riesgo de que sus clientes dejen de confiar en ella y se pasen a la competencia. Debido a esto, los clientes esperan que su aplicación tenga el mínimo número de errores posibles. Uno de los aspectos más importantes en este sentido es que se haga un proceso meticuloso de \emph{testing} y validación antes de publicar una aplicación, priorizando las partes más críticas del sistema y que pueden suponer un cuello de botella para la misma.
 \item \textbf{Recuperación instantánea ante fallos} (\emph{Zero Down Time}\cite{zdwt}). En caso de que la aplicación llegue a fallar, lo que es imposible de evitar al completo, es necesario minimizar el tiempo en el que no se provee un servicio. Asegurar un tiempo mínimo de recuperación supone un desafío importante cuando una máquina física actúa como el punto de fallo único de la aplicación. Sin embargo, el hecho de tener una aplicación desplegada en contenedores virtuales, nos facilita en gran medida asegurar un sistema tolerante a fallos. Este sistema debe constar de ciertas características, entre las que se destacan:
 \begin{itemize}
-\item Disponer de un cluster de máquinas configurado.
-\item Aplicar técnicas de replicación y balanceo de carga.
-\item Tener montado un volumen compartido de datos que permita a diferentes máquinas acceder a las imágenes que utilizan las máquinas virtuales.
+\item Disponer de un \textbf{cluster de máquinas} configurado.
+\item Aplicar técnicas de \textbf{replicación y balanceo de carga}.
+\item Tener montado un \textbf{volumen compartido de datos} que permita a diferentes máquinas acceder a las imágenes que utilizan las máquinas virtuales. Por ejemplo, \emph{Network File System} (\textbf{NFS}).
 \end{itemize}
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{spof.png}
 \caption{\label{fig:zerodt}Esquema de recuperación ante fallos.}
 \end{figure}
-Cómo se puede observar en la Fgura~\ref{fig:zerodt}, cuando el servidor físico A falla, se desencadena una migración del contenedor virtual al servidor B. Lo que debería ocurrir sin problema en caso de que el volumen de datos compartido por red siga disponible y solo haya ocurrido un problema aislado en la máquina A.
-\item \textbf{Tiempo rápido de despliegue}. Uno de los problemas más extendidos en el ámbito de las aplicaciones empresariales de elevada complejidad es que la aplicación puede tener muchas dependencias entre diferentes componentes, lo que hace díficil realizar un despliegue limpio y sin errores. Se ponía como ejemplo el clásico problema de que en el entorno de desarrollo funciona todo perfectamente, pero cuando se traslada a producción deja de hacerlo y cada equipo le echa la culpa a otro.
+Cómo se puede observar en la Figura~\ref{fig:zerodt}, cuando el servidor físico A falla, se desencadena una migración del contenedor virtual al servidor B. Lo que debería ocurrir sin complicaciones en caso de que el volumen de datos compartido por red siga disponible y solo haya ocurrido un problema aislado en la máquina A. En general, el demonio encargado de vigilar el correcto funcionamiento de los nodos se denomina \textit{watchdog} y su funcionamiento se basa en el intercambio periódico de mensajes con los nodos del cluster para intercambiar información del estado del servicio (\textit{keepalive o hearbeat}).
+\item \textbf{Tiempo rápido de despliegue}. Uno de los problemas más extendidos en el ámbito de las aplicaciones empresariales de elevada complejidad es que la aplicación puede tener muchas dependencias entre diferentes componentes, lo que hace difícil realizar un despliegue limpio y sin errores. Se ponía como ejemplo el clásico problema de que en el entorno de desarrollo funciona todo perfectamente, pero cuando se traslada a producción deja de hacerlo y cada equipo le echa la culpa a otro.
 \item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
 \end{itemize}
 
-\section{Arquitectura orientada a servicios}\index{Arquitectura orientada a servicios}
+\section{Arquitectura orientada a servicios}
+El concepto de creación de arquitecturas orientadas a servicios, comúnmente conocido como SOA (\textbf{Service Oriented Architecture}), trata de definir aplicaciones basadas en el uso de una \textbf{colección servicios que pueden trabajar de forma autónoma}, pero que también intercambian mensajes y se coordinan para cumplir una funcionalidad más compleja. Se parte del concepto de servicio, que es una funcionalidad bien definida, autocontenida y que no depende del contexto o estado de otros servicios. Por ejemplo, validar un cliente en la aplicación o proveer datos sobre el funcionamiento de la misma. La división en servicios tiene las ventajas de que la realización de \textit{tests} y la corrección de errores se puede realizar de una forma mucho más precisa, y no es necesario cambiar la aplicación completa para corregir fallos o introducir nuevas funcionalidades.
+
+Para implementar una arquitectura orientada a servicios de forma eficiente, es necesario tener en cuenta una serie de conceptos y estrategias de diseño:
+\begin{itemize}
+\item Tener claro un \textbf{conjunto de servicios} que se quieran proveer a nuestros clientes o incluso de forma interna en la organización.
+\item Añadir una serie de procesos de \textbf{orquestación}, \textbf{balanceo de cargas} y de \textbf{recolección de métricas} para asegurar el buen funcionamiento de los mismos.
+\item Aplicar un conjunto de patrones de diseño que permita realizar un \textbf{diseño modular}, que tenga una buena \textbf{encapsulación} de los componentes, que asegure el \textbf{aislamiento}, la \textbf{reusabilidad} y la \textbf{escalabilidad}.
+\item Utilizar un modelo de programación compatibles con diferentes estándares de comunicación y que sea soportado por múltiples tecnologías, por ejemplo, los \textbf{servicios REST}.
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{stateless.png}
+\caption{\label{fig:scomm}Peticiones del cliente con estado almacenado fuera de los componentes\cite{sless}.}
+\end{figure}
+
+\subsection{Comunicación}
+En una arquitectura orientada a servicios uno de los aspectos más importantes es la comunicación, ya sea entre los propios componentes de nuestra aplicación o los métodos de nuestra API que exponemos al público. Los servicios de una aplicación distribuída pueden estar alojados en diferentes máquinas, lo que hace necesario que el estado de nuestra aplicación sea almacenado de forma externa a los componentes, estos se conocen como \emph{Stateless Components}  (puede verse un esquema en la Figura~\ref{fig:scomm}). Una de las técnicas más habituales para implementarlos es \textbf{incluir la información de estado en las peticiones} que recibe cada componente o hacer que sea transmitida en los mensajes \emph{keepalive} enviados por los procesos de orquestación.
+
+
+
+\subsection{Microservicios}
+%\subsection{Subsections}\index{Section}
 
 Las aplicaciones monolíticas se despliegan como un solo bloque de frontend, lógica de negocio y acceso a datos. Si existe un cuello de botella en sólo un elemento del sistema necesitaríamos desplegar varias instancias de la aplicación completa  y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución mala, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
 
-El concepto de arquitectura orientada a servicios, comúnmente conocido como SOA (Service Oriented Architecture), trata de definir aplicaciones compartimentalizadas en paquetes que se despliegan de forma independiente.
-
-\subsection{Microservicios}\index{Microservicios}
-%\subsection{Subsections}\index{Section}
-
 Permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas…). Pueden ser atómicos o compuestos, que agrupan varios dominios.
 
-Desplegar suele resultar el paso más complicado en este tipo de aplicaciones que en las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que suelen presentar interdependencias y , por lo tanto, requieren que se realize un orden de arranque concreto.
+Desplegar suele resultar el paso más complicado en este tipo de aplicaciones que en las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que suelen presentar interdependencias y , por lo tanto, requieren que se realice un orden de arranque concreto.
 
 Existe una serie de servicios de código abierto que permiten gestionar los diferentes microservicios y las interacciones que presentan. Algunos de los más usados pertenecen al framework Spring Cloud de Netflix:
 \begin{itemize}
@@ -166,7 +184,7 @@ Es una tecnología de virtualización que permite definir aplicaciones autoconte
 
 A diferencia de las máquinas virtuales convencionales, las tecnologías de contenedores como Docker permiten ahorrarse la interacción con el sistema operativo huésped(guest), es decir, Docker es capaz de realizar una interacción directa con el Kernel Linux de la máquina anfitrión(host).
 
-Algunas características destacadas sobre Docker en la conferencia son las siguientes: es portable, ligero, automatizable, autocontenido, aislado(ofrece entorno de desarrollo aislado que se comporta a modo de sandbox), agiliza el despliegue y el mantenimiento.
+Algunas características destacadas sobre Docker en la conferencia son las siguientes: es portable, ligero, automatizable, autocontenido, aislado(ofrece entorno de desarrollo que se comporta a modo de \textit{sandbox}), agiliza el despliegue y el mantenimiento.
 
 Con muchos contenedores pueden aparecer problemas de coordinación, para solucionarlos se utilizan balanceadores o administradores. Algunos de los más conocidos son:
 \begin{itemize}
@@ -175,14 +193,14 @@ Con muchos contenedores pueden aparecer problemas de coordinación, para solucio
 \item Docker Swarm
 \end{itemize}
 
-\section{DevOps}\index{Devops}
+\section{DevOps}
 %\todo[inline, color=green!40]{This is an inline comment.}
 
-Otro de los conceptos introducidos en la conferencia es el de DevOps(el término proviene del acrónimo inglés formado por Development y Operations), es un concepto que ha atraído un interés creciente en el ámbito de la gestión de proyectos y la ingeniería del Software durante la última década. Recibe una gran influencia de las metodologías ágiles de desarrollo y propone una mejora de la comunicación entre los equipos de desarrollo y operaciones. A lo largo de la historia, se ha producido un conflicto entre ambos equipos que surge de forma natural de sus roles, en el área de desarrollo se intenta introducir nueva funcionalidad mientras que el equipo de operaciones crea estabilidad y se ocupa de resolver errores. 
+Otro de los conceptos introducidos en la conferencia es el de DevOps (el término proviene del acrónimo inglés formado por \textit{Development y Operations}), es un concepto que ha atraído un interés creciente en el ámbito de la gestión de proyectos y la ingeniería del Software durante la última década. Recibe una gran influencia de las metodologías ágiles de desarrollo y propone una mejora de la comunicación entre los equipos de desarrollo y operaciones. A lo largo de la historia, se ha producido un conflicto entre ambos equipos que surge de forma natural de sus roles, en el área de desarrollo se intenta introducir nueva funcionalidad mientras que el equipo de operaciones crea estabilidad y se ocupa de resolver errores. 
 
 Las técnicas de DevOps se basan en la creación de una cultura común entre ambos equipos, que se aproveche al máximo de la automatización de procesos, la obtención de métricas que permita guiar la toma de decisiones y la integración de ambos equipos de forma que participen en todo el ciclo de vida del proyecto(diseño, desarrollo, mantenimiento…).
 
-Una de las herramientas más utilizadas para automatizar las actividades del ciclo de vida del Software es Jenkins. Esta herramienta permite definir tareas para automatizar el proceso de compilación, testing, despliegue y recopilación de métricas. Otras herramientas que pueden de resultar de utilidad son SonarQube(Testing de calidad de código) y NexusOSS(Gestor de dependencias y artefactos).
+Una de las herramientas más utilizadas para automatizar las actividades del ciclo de vida del Software es Jenkins. Esta herramienta permite definir tareas para automatizar el proceso de compilación, \textit{testing}, despliegue y recopilación de métricas. Otras herramientas que pueden de resultar de utilidad son SonarQube(Testing de calidad de código) y NexusOSS(Gestor de dependencias y artefactos).
 
 
 
@@ -207,8 +225,12 @@ Una de las herramientas más utilizadas para automatizar las actividades del cic
 
 \begin{thebibliography}{1}
 %\bibitem{key} description. \href{https://...}{Enlace}
-\bibitem{reliab}Fundaments of Cloud Service Reliability, Microsoft Secure Blog. \href{https://blogs.microsoft.com/microsoftsecure/2012/09/12/fundamentals-of-cloud-service-reliability/}{Enlace}.
-\bibitem{zdwt}Zero Downtime, CloudPatterns.org. \href{http://cloudpatterns.org/design_patterns/zero_downtime}{Enlace}
+\bibitem{cloudpatts}\textbf{Cloud Computing Patterns, Springer (2014)}. \textit{Fundamentals to Design, Build, and Manage Cloud Applications}. Authors: Christoph Fehling, Frank Leymann, Ralph Retter, Walter Schupeck and Peter Arbitter.
+\bibitem{reliab}\href{https://blogs.microsoft.com/microsoftsecure/2012/09/12/fundamentals-of-cloud-service-reliability/}{Fundaments of Cloud Service Reliability}, Microsoft Secure Blog.
+\bibitem{zdwt}\href{http://cloudpatterns.org/design_patterns/zero_downtime}{Zero Downtime}, cloudpatterns.org.
+\bibitem{wscom}\href{http://www.service-architecture.com/articles/web-services/web_services_explained.html}{Web Services Explained} (Communication). service-architecture.com.
+\bibitem{ibmsoa}\href{https://www-01.ibm.com/software/solutions/soa/}{Service Oriented Architecture}: simply good design. ibm.com.
+\bibitem{sless}\href{http://www.cloudcomputingpatterns.org/stateless_component/}{Stateless Component, cloudcomputingpatterns.org}
 \end{thebibliography}
 
 \end{document}
