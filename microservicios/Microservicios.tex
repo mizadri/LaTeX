@@ -156,20 +156,38 @@ Para implementar una arquitectura orientada a servicios de forma eficiente, es n
 \end{figure}
 
 \subsection{Comunicación}
-En una arquitectura orientada a servicios uno de los aspectos más importantes es la comunicación, ya sea entre los propios componentes de nuestra aplicación o los métodos de nuestra API que exponemos al público. Los servicios de una aplicación distribuída pueden estar alojados en diferentes máquinas, lo que hace necesario que el estado de nuestra aplicación sea almacenado de forma externa a los componentes, estos se conocen como \emph{Stateless Components}  (puede verse un esquema en la Figura~\ref{fig:scomm}). Una de las técnicas más habituales para implementarlos es \textbf{incluir la información de estado en las peticiones} que recibe cada componente o hacer que sea transmitida en los mensajes \emph{keepalive} enviados por los procesos de orquestación.
+En una arquitectura orientada a servicios uno de los aspectos más importantes es la comunicación, ya sea entre los propios componentes de nuestra aplicación o los métodos de nuestra API que exponemos al público. Los servicios de una aplicación distribuída pueden estar alojados en diferentes máquinas, lo que hace necesario que el estado de nuestra aplicación sea almacenado de forma externa a los componentes, estos se conocen como \textbf{Stateless Components}  (puede verse un esquema en la Figura~\ref{fig:scomm}). Una de las técnicas más habituales para implementarlos es \textbf{incluir la información de estado en las peticiones} que recibe cada componente, otra forma de hacerlo sería transmitirla en los mensajes \emph{keepalive} enviados por los procesos de orquestación.
 
+En este contexto que requiere una comunicación entre múltiples componentes sin ninguna comunicación previa de esquemas de datos, como si era necesario con SOAP o XML, podemos destacar la utilidad de las APIs REST por las siguientes características:
 
+\begin{itemize}
+\item Representan un \textbf{protocolo cliente/servidor sin estado}.
+\item \textbf{ Facilitan la portabilidad} y la comunicación entre diferentes plataformas y lenguajes, ya que se basan en el \textbf{protocolo HTTP} y el uso de sus verbos: POST, GET, PUT y DELETE.
+\item Permiten \textbf{exponer recursos de forma sencilla} diferentes  mediante las URI (Unique Resource Identifier).
+\item Ofrecen una gran \textbf{flexibilidad para transmitir diferentes tipos de datos}: html, json, text, xml, jpeg, etc.
+\end{itemize}
 
 \subsection{Microservicios}
 %\subsection{Subsections}\index{Section}
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{sketch.png}
+\caption{\label{fig:msv}Aplicación monolítica VS microservicios.}
+\end{figure}
 
-Las aplicaciones monolíticas se despliegan como un solo bloque de frontend, lógica de negocio y acceso a datos. Si existe un cuello de botella en sólo un elemento del sistema necesitaríamos desplegar varias instancias de la aplicación completa  y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución mala, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
+Las aplicaciones monolíticas se despliegan como un solo bloque de frontend, lógica de negocio y acceso a datos. Si existe un cuello de botella en sólo un elemento del sistema necesitaríamos desplegar varias instancias de la aplicación completa y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución pésima, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
 
-Permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas…). Pueden ser atómicos o compuestos, que agrupan varios dominios.
+Como se puede apreciar en la Figura~\ref{fig:msv}, las aplicaciones diseñadas usando microservicios permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas…). Los componentes pueden ser atómicos o compuestos, que agrupan varios dominios.
 
-Desplegar suele resultar el paso más complicado en este tipo de aplicaciones que en las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que suelen presentar interdependencias y , por lo tanto, requieren que se realice un orden de arranque concreto.
+Las principales ventajas que aportan el uso de microservicios son las siguientes:
+\begin{itemize}
+\item La división de las aplicaciones en microservicios nos permite hacer una mayor \textbf{reutilización de componentes} en otras aplicaciones. Varios proyectos suelen compartir una lógica de negocio o de acceso a datos similar, y el diseño modular de los microservicios nos aporta una gran flexibilidad para adaparlos a otros problemas.
+\item Como ya mencionamos anteriormente, aporta una gran \textbf{mejora en la escalabilidad del sistema} en función de nuestras necesidades.
+\item El proceso de \textbf{mantenimiento se simplifica} enormemente, ya que los componentes sin estado interno permiten reducir el acomplamiento y es más sencillo detectar y resolver los problemas en un único componente sin detener al completo el servicio.
+\item El sistema es \textbf{resistente a fallos} ya que, a diferencia de las aplicaciones monolíticas, el fallo de un componente no supone necesariamente el fallo de la aplicación.
+\end{itemize}
 
-Existe una serie de servicios de código abierto que permiten gestionar los diferentes microservicios y las interacciones que presentan. Algunos de los más usados pertenecen al framework Spring Cloud de Netflix:
+Desplegar suele resultar el paso más complicado en este tipo de aplicaciones que en las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que suelen presentar interdependencias y , por lo tanto, requieren que se realice un orden de arranque concreto. Existe una serie de servicios de código abierto que permiten gestionar los diferentes microservicios y las interacciones que presentan. Algunos de los más usados pertenecen al framework Spring Cloud de Netflix:
 \begin{itemize}
 \item Eureka: Service Discovery.
 \item Zuul: Proxy.
@@ -180,13 +198,19 @@ Existe una serie de servicios de código abierto que permiten gestionar los dife
 
 \vspace{1cm}
 \section{Docker \icon{docker.png}}
-Es una tecnología de virtualización que permite definir aplicaciones autocontenidas. Se basa en contenedores que se ejecutan de forma virtual directamente sobre el Kernel Linux y otras plataformas. Estos contenedores incluyen todas las librerías y binarios necesarios para el despliegue de una aplicación.
+Es una tecnología de virtualización que permite definir aplicaciones autocontenidas. Se basa en el concepto de contenedores, se tratan de entornos de ejecución portables y aislados de la máquina anfitriona. Estos contenedores incluyen todas las librerías y binarios necesarios para el despliegue de una aplicación. Esto permite definir contenedores ligeros de forma eficiente, que tienen todo lo necesario para que una aplicación se ejecute y que tras su despliegue no se oiga la típica excusa de: 'En mi máquina funcionaba'.
 
-A diferencia de las máquinas virtuales convencionales, las tecnologías de contenedores como Docker permiten ahorrarse la interacción con el sistema operativo huésped(guest), es decir, Docker es capaz de realizar una interacción directa con el Kernel Linux de la máquina anfitrión(host).
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth]{container.png}
+\caption{\label{fig:cont}Infraestructura de un contenedor.}
+\end{figure}
+
+A diferencia de las máquinas virtuales convencionales, las tecnologías de contenedores como Docker no incluyen un sistema operativo completo en su imágen, tan solo las librerías y configuraciones necesarias para su funcionamiento (se puede observar un esquema en la Figura~\ref{fig:cont}). Esto permite mejorar la eficiencia al no existir la sobrecarga que supone la interacción de las máquinsa virtuales con el sistema operativo huésped(guest), ya que Docker es capaz de realizar una interacción directa con el Kernel Linux de la máquina anfitrión(host).
 
 Algunas características destacadas sobre Docker en la conferencia son las siguientes: es portable, ligero, automatizable, autocontenido, aislado(ofrece entorno de desarrollo que se comporta a modo de \textit{sandbox}), agiliza el despliegue y el mantenimiento.
 
-Con muchos contenedores pueden aparecer problemas de coordinación, para solucionarlos se utilizan balanceadores o administradores. Algunos de los más conocidos son:
+Con muchos contenedores pueden aparecer problemas de coordinación, para solucionarlos se utilizan balanceadores de carga o administradores (también conocidos como orquestadores). Algunos de los más conocidos son:
 \begin{itemize}
 \item Kubernetes (Google)
 \item Amazon Web Services ECS
@@ -231,6 +255,7 @@ Una de las herramientas más utilizadas para automatizar las actividades del cic
 \bibitem{wscom}\href{http://www.service-architecture.com/articles/web-services/web_services_explained.html}{Web Services Explained} (Communication). service-architecture.com.
 \bibitem{ibmsoa}\href{https://www-01.ibm.com/software/solutions/soa/}{Service Oriented Architecture}: simply good design. ibm.com.
 \bibitem{sless}\href{http://www.cloudcomputingpatterns.org/stateless_component/}{Stateless Component, cloudcomputingpatterns.org}
+\bibitem{restapi}\href{https://bbvaopen4u.com/es/actualidad/api-rest-que-es-y-cuales-son-sus-ventajas-en-el-desarrollo-de-proyectos}{API REST: ventajas.}  bbvaopen4u.com.
 \end{thebibliography}
 
 \end{document}
