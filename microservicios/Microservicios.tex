@@ -41,6 +41,18 @@
 \usepackage{color}
 \usepackage{caption}
 \usepackage{etoolbox}
+\usepackage{fancybox}
+\usepackage{enumitem}
+\usepackage{listings}
+\lstset{
+	language=sh,
+	breaklines=true,
+	breakatwhitespace=true,
+	basicstyle=\ttfamily,
+	showstringspaces=false,
+	columns=fullflexible-
+}    	
+
 \newcommand{\icon}[1]{\includegraphics[height=18pt]{#1}}
 \robustify{\icon}
 \makeindex
@@ -116,7 +128,7 @@
 Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuestos en una conferencia optativa que tuvo lugar durante la semana de la informática de 2017. Los ponentes fueron dos ingenieros de la empresa GMV (Ricardo de Castro y Roberto Galán). En concreto, el nombre de la conferencia era el siguiente: Despliegue automático de arquitecturas escalables basadas en microservicios sobre el Cloud de Google (23 de Febrero, 11-14 horas). Conviene puntualizar que al final no usaron la plataforma de Google, sino que se basaron en Amazon Web Services y Docker Swarm para desplegar una aplicación web que se basaba en el uso de microservicios para su funcionamiento. Al mismo tiempo, hablaron de un concepto que está muy de moda últimamente como es el enfoque \emph{DevOps}, también está relacionado con el despliegue rápido y eficiente de código en la nube, la automatización de procesos de desarrollo (\emph{testing}, recogida de métricas, despliegue, etc.) y las metodologías ágiles.
 \end{abstract}
 
-\section{Introducción}
+\section{Introducción}\label{sec:intro}
 
 Durante la conferencia, se hizo especial hincapié en las necesidades de los clientes y las características que estos exigen en una aplicación de carácter empresarial que se ejecuta en la nube. Los requisitos más destacados son los siguientes:
 
@@ -138,8 +150,13 @@ Cómo se puede observar en la Figura~\ref{fig:zerodt}, cuando el servidor físic
 \item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
 \end{itemize}
 
-\section{Arquitectura orientada a servicios}
-El concepto de creación de arquitecturas orientadas a servicios, comúnmente conocido como SOA (\textbf{Service Oriented Architecture}), trata de definir aplicaciones basadas en el uso de una \textbf{colección servicios que pueden trabajar de forma autónoma}, pero que también intercambian mensajes y se coordinan para cumplir una funcionalidad más compleja. Se parte del concepto de servicio, que es una funcionalidad bien definida, autocontenida y que no depende del contexto o estado de otros servicios. Por ejemplo, validar un cliente en la aplicación o proveer datos sobre el funcionamiento de la misma. La división en servicios tiene las ventajas de que la realización de \textit{tests} y la corrección de errores se puede realizar de una forma mucho más precisa, y no es necesario cambiar la aplicación completa para corregir fallos o introducir nuevas funcionalidades.
+Este trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:cloud} se realizará una exposición de diferentes conceptos que se utilizan en \emph{Cloud Computing}. A continuación se introducirá el paradigma de las arquitecturas orientadas a servicios (SOA) en la Sección~\ref{sec:soa}. Más adelante se introducirá la herramienta de contenedores Docker (Sección~\ref{sec:docker}), con la que se pueden construir de forma sencilla diferentes tipos de aplicaciones basadas en microservicios. Para finalizar, se presentarán una serie de conclusiones personales que se han originado a partir de la conferencia y de la investigación posterior realizada.
+
+\section{Cloud Computing}\label{sec:soa}
+A continuación se presentarán diferentes conceptos utilizados en el diseño y construcción de aplicaciones que se ejecutan en la nube, comúnmente conocido como \emph{Cloud Computing}.
+
+\section{Arquitectura orientada a servicios}\label{sec:soa}
+El paradigma de creación de arquitecturas orientadas a servicios, comúnmente conocido como SOA (\textbf{Service Oriented Architecture}), trata de definir aplicaciones basadas en el uso de una \textbf{colección servicios que pueden trabajar de forma autónoma}, pero que también intercambian mensajes y se coordinan para cumplir una funcionalidad más compleja. Se parte del concepto de servicio, que es una funcionalidad bien definida, autocontenida y que no depende del contexto o estado de otros servicios. Por ejemplo, validar un cliente en la aplicación o proveer datos sobre el funcionamiento de la misma. La división en servicios tiene las ventajas de que la realización de \textit{tests} y la corrección de errores se puede realizar de una forma mucho más precisa, y no es necesario cambiar la aplicación completa para corregir fallos o introducir nuevas funcionalidades.
 
 Para implementar una arquitectura orientada a servicios de forma eficiente, es necesario tener en cuenta una serie de conceptos y estrategias de diseño:
 \begin{itemize}
@@ -155,10 +172,10 @@ Para implementar una arquitectura orientada a servicios de forma eficiente, es n
 \caption{\label{fig:scomm}Peticiones del cliente con estado almacenado fuera de los componentes\cite{sless}.}
 \end{figure}
 
-\subsection{Comunicación}
+\subsection{Comunicación}\label{sec:intro}
 En una arquitectura orientada a servicios uno de los aspectos más importantes es la comunicación, ya sea entre los propios componentes de nuestra aplicación o los métodos de nuestra API que exponemos al público. Los servicios de una aplicación distribuída pueden estar alojados en diferentes máquinas, lo que hace necesario que el estado de nuestra aplicación sea almacenado de forma externa a los componentes, estos se conocen como \textbf{Stateless Components}  (puede verse un esquema en la Figura~\ref{fig:scomm}). Una de las técnicas más habituales para implementarlos es \textbf{incluir la información de estado en las peticiones} que recibe cada componente, otra forma de hacerlo sería transmitirla en los mensajes \emph{keepalive} enviados por los procesos de orquestación.
 
-En este contexto que requiere una comunicación entre múltiples componentes sin ninguna comunicación previa de esquemas de datos, como si era necesario con SOAP o XML, podemos destacar la utilidad de las APIs REST por las siguientes características:
+En este contexto que requiere una comunicación entre múltiples componentes sin ninguna comunicación previa de esquemas de datos, como sí era necesario con protocolos SOAP o XML, podemos destacar la utilidad de las APIs REST por las siguientes características:
 
 \begin{itemize}
 \item Representan un \textbf{protocolo cliente/servidor sin estado}.
@@ -167,7 +184,7 @@ En este contexto que requiere una comunicación entre múltiples componentes sin
 \item Ofrecen una gran \textbf{flexibilidad para transmitir diferentes tipos de datos}: html, json, text, xml, jpeg, etc.
 \end{itemize}
 
-\subsection{Microservicios}
+\subsection{Microservicios}\label{sec:micro}
 %\subsection{Subsections}\index{Section}
 \begin{figure}
 \centering
@@ -197,7 +214,7 @@ Desplegar suele resultar el paso más complicado en este tipo de aplicaciones qu
 
 
 \vspace{1cm}
-\section{Docker \icon{docker.png}}
+\section{Docker \icon{docker.png}}\label{sec:docker}
 Es una tecnología de virtualización que permite definir aplicaciones autocontenidas. Se basa en el concepto de contenedores, se tratan de entornos de ejecución portables y aislados de la máquina anfitriona. Estos contenedores incluyen todas las librerías y binarios necesarios para el despliegue de una aplicación. Esto permite definir contenedores ligeros de forma eficiente, que tienen todo lo necesario para que una aplicación se ejecute y que tras su despliegue no se oiga la típica excusa de: 'En mi máquina funcionaba'.
 
 \begin{figure}
@@ -216,6 +233,14 @@ Con muchos contenedores pueden aparecer problemas de coordinación, para solucio
 \item Amazon Web Services ECS
 \item Docker Swarm
 \end{itemize}
+
+\begin{itemize}[label=\textdollar]
+\item \begin{lstlisting}
+docker node inspect worker1 | grep IDdocker node update --label-add type=master 18yrb7m650umx738rtevojpqy
+\end{lstlisting}
+\end{itemize}
+
+
 
 \section{DevOps}
 %\todo[inline, color=green!40]{This is an inline comment.}
