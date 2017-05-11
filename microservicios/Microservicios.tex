@@ -150,7 +150,7 @@ Cómo se puede observar en la Figura~\ref{fig:zerodt}, cuando el servidor físic
 \item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
 \end{itemize}
 
-Este trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:cloud} se realizará una exposición de diferentes conceptos que se utilizan en \emph{Cloud Computing}. A continuación se introducirá el paradigma de las arquitecturas orientadas a servicios (SOA) en la Sección~\ref{sec:soa}. Más adelante se introducirá la herramienta de contenedores Docker (Sección~\ref{sec:docker}), con la que se pueden construir de forma sencilla diferentes tipos de aplicaciones basadas en microservicios. Para finalizar, se presentarán una serie de conclusiones personales que se han originado a partir de la conferencia y de la investigación posterior realizada.
+Este trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:cloud} se realizará una exposición de diferentes conceptos que se utilizan en \emph{Cloud Computing}. A continuación se introducirá el paradigma de las arquitecturas orientadas a servicios (SOA) en la Sección~\ref{sec:soa}. Más adelante se introducirá la herramienta de contenedores Docker (Sección~\ref{sec:docker}), con la que se pueden construir de forma sencilla diferentes tipos de aplicaciones basadas en microservicios. Para finalizar, en la Sección~\ref{sec:conclu} presentaré una serie de opiniones personales que se han originado a partir de la conferencia y de la investigación posterior realizada.
 
 \section{Cloud Computing}\label{sec:soa}
 A continuación se presentarán diferentes conceptos utilizados en el diseño y construcción de aplicaciones que se ejecutan en la nube, comúnmente conocido como \emph{Cloud Computing}.
@@ -251,15 +251,6 @@ Las técnicas de DevOps se basan en la creación de una cultura común entre amb
 
 Una de las herramientas más utilizadas para automatizar las actividades del ciclo de vida del Software es Jenkins. Esta herramienta permite definir tareas para automatizar el proceso de compilación, \textit{testing}, despliegue y recopilación de métricas. Otras herramientas que pueden de resultar de utilidad son SonarQube(Testing de calidad de código) y NexusOSS(Gestor de dependencias y artefactos).
 
-
-
-% -- FIGURE --
-%\begin{figure}
-%\centering
-%\includegraphics[width=0.5\textwidth]{frog.jpg}
-%\caption{\label{fig:frog}This is a figure caption.}
-%\end{figure}
-
 % -- TABLE --
 %\begin{table}
 %\centering
@@ -270,6 +261,8 @@ Una de las herramientas más utilizadas para automatizar las actividades del cic
 %\end{tabular}
 %\caption{\label{tab:widgets}An example table.}
 %\end{table}
+
+\section{Conclusiones}\label{sec:conclu}
 
 
 \begin{thebibliography}{1}
