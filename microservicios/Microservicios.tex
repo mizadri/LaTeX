@@ -159,17 +159,22 @@ Cómo se puede observar en la Figura~\ref{fig:zerodt}, cuando el servidor físic
 Este trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:cloud} se realizará una exposición de diferentes conceptos que se utilizan en \emph{Cloud Computing}. A continuación se introducirá el paradigma de las arquitecturas orientadas a servicios (SOA) en la Sección~\ref{sec:soa}. Más adelante se introducirá la herramienta de contenedores Docker (Sección~\ref{sec:docker}), con la que se pueden construir de forma sencilla diferentes tipos de aplicaciones basadas en microservicios. Tras esto, en la Sección~\ref{sec:devops} Para finalizar, en la Sección~\ref{sec:conclu} presentaré una serie de opiniones personales que se han originado a partir de la conferencia y de la investigación posterior realizada.
 
 \section{Cloud Computing}\label{sec:cloud}
-A continuación se presentarán diferentes conceptos utilizados en el diseño y construcción de aplicaciones que se ejecutan servicios alojados la nube, concepto que se refiere a el alquiler de servidores o servicios específicos a un proveedor externo en función de nuestras necesidades de cómputo, este paradigma es comúnmente conocido como \emph{Cloud Computing}. Algunos de las propiedades esenciales que pueden variar de un proveedor de servicio a otro son las siguientes~\cite{cloudfunds}:
+A continuación se presentarán diferentes conceptos utilizados en el diseño y construcción de aplicaciones que se ejecutan servicios alojados la nube, concepto que se refiere a el alquiler de servidores o servicios específicos a un proveedor externo en función de nuestras necesidades de cómputo, este paradigma es comúnmente conocido como \emph{Cloud Computing}. El Instituto Nacional de Estándares y Tecnología de Estados Unidos (NIST) publicó en 2002 una serie de principios de diseño y definiciones de Cloud Computing~\cite{cloudfunds}. Algunos de las propiedades esenciales que pueden variar de un proveedor de servicio a otro son las siguientes:
 
 \begin{itemize}
-\item \textbf{Servicios bajo demanda}.
-\item \textbf{Acceso a conexión de alto ancho de banda}.
-\item \textbf{Disponibilidad de recursos}.
-\item \textbf{Elasticidad del servicio}.
-\item \textbf{Recolección de métricas}.
+\item \textbf{Servicio bajo demanda auto-escalable}. Un cliente obtiene unas capacidades de cómputo como tiempo de un servidor o almacenamiento en red en función de sus necesidades sin requerir interacción humana con el proveedor de servicio.
+\item \textbf{Acceso a conexión de alto ancho de banda}. Las capacidades del servicio ofrecidas a través de la red pueden ser accedidas mediante mecanismos estándar (habitualmente HTTP) y en plataformas heterogéneas (móviles, tablets, portátiles, servidores, etc.).
+\item \textbf{Disponibilidad de recursos}. Los recursos ofrecidos por el proveedor son ofrecidos a múltiples clientes, que comparten infraestructura pero cada uno dispone de una diferente asignación de recursos físicos y virtuales. Hay cierta sensación de incertidumbre en cuanto a la localización del servicio. Sin embargo, muchos proveedores permiten especificar a alto nivel la región, país o incluso \textit{datacenter} en el que se ejecutará la aplicación. En general, los clientes pueden escoger ente diferentes planes de pago, que permiten adaptar a nuestras necesidades la capacidad de almacenamiento, el tipo (HDD vs SSD), la memoria RAM, el procesador, el ancho de banda o incluso la arquitectura en la que se ejecutará nuestra aplicación (cada vez más proveedores permiten que nuestra aplicación haga uso de GPUs y otros aceleradores).
+\item \textbf{Recolección de métricas}. Los sistemas Cloud controlan y optimizan automáticamente el uso de recursos a través de la recolección de diferentes métricas de rendimiento (ancho de banda, porcentaje de USO de CPU y disco, cuentas de usuario activas, etc.). Además, se suelen aportar diferentes herramientas de visualización como los \textit{dashboards}, que permiten a los usuarios tomar decisiones sobre el tipo de servicio que se ajusta más a sus necesidades.
 \end{itemize}
 
 En función del modelo de servicio que nos ofrezca cada proveedor, podemos clasificar los servicios Cloud en 3 clases fundamentales:
+
+\begin{itemize}
+\item \textbf{Software as a Service} (SaaS).
+\item \textbf{Platform as a Service} (PaaS).
+\item \textbf{Infrastructure as a Service} (IaaS).
+\end{itemize}
 
 Para más información sobre este tema y una visión completa de los patrones de diseño que se utilizan en Cloud Computing, se puede consultar este recurso~\cite{cloudpatts}.
 
@@ -214,9 +219,11 @@ Se puede encontrar una descripción detallada de las APIs REST y sus ventajas en
 
 Las aplicaciones convencionales que se han desarrollado tradicionalmente para problemas tecnológico de cierta envergadura se despliegan como un solo bloque monolítico de \textit{frontend}, lógica de negocio y acceso a datos. Sin embargo, este diseño de arquitectura conlleva ciertas desventajas en el caso de necesitar escalar la capacidad de nuestra aplicación. En concreto, si existe un cuello de botella en sólo un elemento del sistema, necesitaríamos desplegar varias instancias completas de la aplicación y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución pésima, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
 
+Se pueden definir las arquitecturas basadas en microservicios
+
 El concepto de diseño basado en microservicios ha ganado una gran atención en los últimos años, se originó alrededor de 2014 y atrajo mucha atención hacia esta nueva forma de concebir la estructura de las aplicaciones. Puede aportar muchos beneficios si se hace uso del mismo para solucionar los problemas correctos y se comprende cuáles son sus ventajas y en qué casos sería mejor no usarlos. Uno de los riesgos que presenta construir una aplicación desde cero usando este patrón de diseño es que no sabemos exactamente cuales son los requisitos de nuestra aplicación hasta que no empezamos a producir prototipos y recibir retroalimentación de los clientes, además los equipos con poca experiencia tienen la tendencia de querer usar nuevas técnicas de desarrollo como esta sin conocerlas en profundidad y sin saber si se pueden aplicar a su dominio. A pesar de todo, una gran cantidad de proyectos se ha beneficiado del diseño con microservicios y muchas compañías han obtenido buenos resultados al migrar aplicaciones o partes de las mismas a esta nueva técnica de diseño. 
 
-Las aplicaciones que tienen una arquitectura basada en microservicios, como se puede apreciar en la Figura~\ref{fig:msv}, permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas…). Los componentes pueden ser atómicos o compuestos, que agrupan varios dominios. Más información sobre la ejecución distribuida de aplicaciones en microservicios se puede encontrar en~\cite{mservices}.
+Las aplicaciones que tienen una arquitectura basada en microservicios, como se puede apreciar en la Figura~\ref{fig:msv}, permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas, etc.). Los componentes pueden ser atómicos o compuestos, que agrupan varios dominios. Más información sobre la ejecución distribuida de aplicaciones en microservicios se puede encontrar en~\cite{mservices}.
 
 Las principales ventajas que aportan el uso de microservicios son las siguientes:
 \begin{itemize}
@@ -321,9 +328,10 @@ En resumen, creo que ha sido una de las mejores conferencias a las que he acudid
 \begin{thebibliography}{1}
 %\bibitem{key} description. \href{https://...}{Enlace}
 \bibitem{cloudpatts}\textbf{Cloud Computing Patterns, Springer (2014)}. \textit{Fundamentals to Design, Build, and Manage Cloud Applications}. Authors: Christoph Fehling, Frank Leymann, Ralph Retter, Walter Schupeck and Peter Arbitter.
-\bibitem{cloudfunds}\textbf{The NIST definition of cloud computing (2011).} \textit{Mell P. and Grance T.}
+\bibitem{cloudfunds}\textbf{NIST definition of cloud computing (2011).} \textit{Mell P., Grance T.}
 \bibitem{cloudview}\textbf{A view of cloud computing. Communications of the ACM (2010)}\textit{vol. 53, no 4, p. 50-58. ARMBRUST}, Michael, et al.
 \bibitem{microbook}\textbf{Building Microservices (2015, 1st edition). O'Reilly Media, Inc.} \textit{Designing fine-grained systems}. Author: Sam Newman.
+\bibitem{synapse}\textbf{Synapse: a microservices architecture for heterogeneous-database web applications (2015).}\textit{Viennot, Nicolas, et al. Proceedings of the Tenth European Conference on Computer Systems. ACM.}\href{https://github.com/nviennot/synapse}{ Proyecto en Github}. \href{http://viennot.com/synapse.pdf}{Paper}.
 \bibitem{reliab}\href{https://blogs.microsoft.com/microsoftsecure/2012/09/12/fundamentals-of-cloud-service-reliability/}{Fundaments of Cloud Service Reliability}, Microsoft Secure Blog.
 \bibitem{zdwt}\href{http://cloudpatterns.org/design_patterns/zero_downtime}{Zero Downtime}, cloudpatterns.org.
 \bibitem{wscom}\href{http://www.service-architecture.com/articles/web-services/web_services_explained.html}{Web Services Explained} (Communication). service-architecture.com.
