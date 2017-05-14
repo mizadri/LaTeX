@@ -125,16 +125,16 @@
 \clearpage
 
 \begin{abstract}
-Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuestos en una conferencia optativa que tuvo lugar durante la semana de la informática de 2017. Los ponentes fueron dos ingenieros de la empresa GMV (Ricardo de Castro y Roberto Galán). En concreto, el nombre de la conferencia era el siguiente: Despliegue automático de arquitecturas escalables basadas en microservicios sobre el Cloud de Google (23 de Febrero, 11-14 horas). Conviene puntualizar que al final no usaron la plataforma de Google, sino que se basaron en Amazon Web Services y Docker Swarm para desplegar una aplicación web que se basaba en el uso de microservicios para su funcionamiento. Al mismo tiempo, hablaron de un concepto que está muy de moda últimamente como es el enfoque \emph{DevOps}, también está relacionado con el despliegue rápido y eficiente de código en la nube, la automatización de procesos de desarrollo (\emph{testing}, recogida de métricas, despliegue, etc.) y las metodologías ágiles.
+Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuestos en una conferencia optativa que tuvo lugar durante la semana de la informática de 2017. Los ponentes fueron dos ingenieros de la empresa GMV (Ricardo de Castro y Roberto Galán). En concreto, el nombre de la conferencia era el siguiente: Despliegue automático de arquitecturas escalables basadas en microservicios sobre el Cloud de Google (23 de Febrero, 11-14 horas). Conviene puntualizar que al final no usaron la plataforma de Google, sino que se basaron en Amazon Web Services y Docker Swarm para desplegar una aplicación web que hacía uso de microservicios para su funcionamiento. Al mismo tiempo, hablaron de un concepto que está muy de moda últimamente como es el enfoque \emph{DevOps}, también está relacionado con el despliegue rápido y eficiente de código en la nube, la automatización de procesos de desarrollo (\textit{testing}, recogida de métricas, despliegue, etc.) y las metodologías ágiles.
 \end{abstract}
 
 \section{Introducción}\label{sec:intro}
 
-Durante la conferencia, se hizo especial hincapié en las necesidades de los clientes y las características que estos exigen en una aplicación de carácter empresarial que se ejecuta en la nube. Los requisitos más destacados son los siguientes:
+Durante la conferencia, se hizo especial hincapié en las necesidades de los clientes y las características que estos exigen en una aplicación de carácter empresarial que se ejecuta en la nube, aunque se mencionaron brevemente, más tarde encontré diferentes enlaces con más información sobre el tema en~\cite{reliab}. Los requisitos más destacados son los siguientes:
 
 \begin{itemize}
-\item \textbf{Fiabilidad}. El funcionamiento de las aplicaciones web está íntimamente relacionado con la imagen que las grandes empresas tienen en la sociedad, si una tienda de comercio electrónico se cae durante una hora puede suponer pérdidas millonarias para la empresa y acarrea el riesgo de que sus clientes dejen de confiar en ella y se pasen a la competencia. Debido a esto, los clientes esperan que su aplicación tenga el mínimo número de errores posibles. Uno de los aspectos más importantes en este sentido es que se haga un proceso meticuloso de \emph{testing} y validación antes de publicar una aplicación, priorizando las partes más críticas del sistema y que pueden suponer un cuello de botella para la misma.
-\item \textbf{Recuperación instantánea ante fallos} (\emph{Zero Down Time}\cite{zdwt}). En caso de que la aplicación llegue a fallar, lo que es imposible de evitar al completo, es necesario minimizar el tiempo en el que no se provee un servicio. Asegurar un tiempo mínimo de recuperación supone un desafío importante cuando una máquina física actúa como el punto de fallo único de la aplicación. Sin embargo, el hecho de tener una aplicación desplegada en contenedores virtuales, nos facilita en gran medida asegurar un sistema tolerante a fallos. Este sistema debe constar de ciertas características, entre las que se destacan:
+\item \textbf{Fiabilidad}. El funcionamiento de las aplicaciones web está íntimamente relacionado con la imagen que las grandes empresas tienen en la sociedad, si una tienda de comercio electrónico se cae durante una hora puede suponer pérdidas millonarias para la empresa y acarrea el riesgo de que sus clientes dejen de confiar en ella y se pasen a la competencia. Debido a esto, los clientes esperan que su aplicación tenga el mínimo número de errores posibles. Uno de los aspectos más importantes en este sentido es que se haga un proceso meticuloso de \textit{testing} y validación antes de publicar una aplicación, priorizando las partes más críticas del sistema y que pueden suponer un cuello de botella para la misma.
+\item \textbf{Recuperación instantánea ante fallos} (\emph{Zero Down Time}~\cite{zdwt}). En caso de que la aplicación llegue a fallar, lo que es imposible de evitar al completo, es necesario minimizar el tiempo en el que no se provee un servicio. Asegurar un tiempo mínimo de recuperación supone un desafío importante cuando una máquina física actúa como el punto de fallo único de la aplicación. Sin embargo, el hecho de tener una aplicación desplegada en contenedores virtuales, nos facilita en gran medida asegurar un sistema tolerante a fallos. Este sistema debe constar de ciertas características, entre las que se destacan:
 \begin{itemize}
 \item Disponer de un \textbf{cluster de máquinas} configurado.
 \item Aplicar técnicas de \textbf{replicación y balanceo de carga}.
@@ -150,30 +150,42 @@ Cómo se puede observar en la Figura~\ref{fig:zerodt}, cuando el servidor físic
 \item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
 \end{itemize}
 
-Este trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:cloud} se realizará una exposición de diferentes conceptos que se utilizan en \emph{Cloud Computing}. A continuación se introducirá el paradigma de las arquitecturas orientadas a servicios (SOA) en la Sección~\ref{sec:soa}. Más adelante se introducirá la herramienta de contenedores Docker (Sección~\ref{sec:docker}), con la que se pueden construir de forma sencilla diferentes tipos de aplicaciones basadas en microservicios. Para finalizar, en la Sección~\ref{sec:conclu} presentaré una serie de opiniones personales que se han originado a partir de la conferencia y de la investigación posterior realizada.
+Este trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:cloud} se realizará una exposición de diferentes conceptos que se utilizan en \emph{Cloud Computing}. A continuación se introducirá el paradigma de las arquitecturas orientadas a servicios (SOA) en la Sección~\ref{sec:soa}. Más adelante se introducirá la herramienta de contenedores Docker (Sección~\ref{sec:docker}), con la que se pueden construir de forma sencilla diferentes tipos de aplicaciones basadas en microservicios. Tras esto, en la Sección~\ref{sec:devops} Para finalizar, en la Sección~\ref{sec:conclu} presentaré una serie de opiniones personales que se han originado a partir de la conferencia y de la investigación posterior realizada.
 
-\section{Cloud Computing}\label{sec:soa}
-A continuación se presentarán diferentes conceptos utilizados en el diseño y construcción de aplicaciones que se ejecutan en la nube, comúnmente conocido como \emph{Cloud Computing}.
+\section{Cloud Computing}\label{sec:cloud}
+A continuación se presentarán diferentes conceptos utilizados en el diseño y construcción de aplicaciones que se ejecutan servicios alojados la nube, concepto que se refiere a el alquiler de servidores o servicios específicos a un proveedor externo en función de nuestras necesidades de cómputo, este paradigma es comúnmente conocido como \emph{Cloud Computing}. Algunos de las propiedades esenciales que pueden variar de un proveedor de servicio a otro son las siguientes~\cite{cloudfunds}:
+
+\begin{itemize}
+\item \textbf{Servicios bajo demanda}.
+\item \textbf{Acceso a conexión de alto ancho de banda}.
+\item \textbf{Disponibilidad de recursos}.
+\item \textbf{Elasticidad del servicio}.
+\item \textbf{Recolección de métricas}.
+\end{itemize}
+
+En función del modelo de servicio que nos ofrezca cada proveedor, podemos clasificar los servicios Cloud en 3 clases fundamentales:
+
+Para más información sobre este tema y una visión completa de los patrones de diseño que se utilizan en Cloud Computing, se puede consultar este recurso~\cite{cloudpatts}.
 
 \section{Arquitectura orientada a servicios}\label{sec:soa}
-El paradigma de creación de arquitecturas orientadas a servicios, comúnmente conocido como SOA (\textbf{Service Oriented Architecture}), trata de definir aplicaciones basadas en el uso de una \textbf{colección servicios que pueden trabajar de forma autónoma}, pero que también intercambian mensajes y se coordinan para cumplir una funcionalidad más compleja. Se parte del concepto de servicio, que es una funcionalidad bien definida, autocontenida y que no depende del contexto o estado de otros servicios. Por ejemplo, validar un cliente en la aplicación o proveer datos sobre el funcionamiento de la misma. La división en servicios tiene las ventajas de que la realización de \textit{tests} y la corrección de errores se puede realizar de una forma mucho más precisa, y no es necesario cambiar la aplicación completa para corregir fallos o introducir nuevas funcionalidades.
+El paradigma de creación de arquitecturas orientadas a servicios, comúnmente conocido como SOA (\textbf{Service Oriented Architecture}), trata de definir aplicaciones basadas en el uso de una \textbf{colección servicios que pueden trabajar de forma autónoma}, pero que también intercambian mensajes y se coordinan para cumplir una funcionalidad más compleja. Se parte del concepto de servicio, que es una funcionalidad bien definida, autocontenida y que no depende del contexto o estado de otros servicios. Por ejemplo, validar un cliente en la aplicación o proveer datos sobre el funcionamiento de la misma por causa de una petición específica (Ej. Obtener datos del producto con ID 152). La división en servicios tiene las ventajas de que la realización de \textit{tests} y la corrección de errores se puede realizar de una forma mucho más precisa, y no es necesario cambiar la aplicación completa para corregir fallos o introducir nuevas funcionalidades. Se puede obtener más información sobre los servicios web y su funcionamiento en la siguiente referencia~\cite{wscom}.
 
-Para implementar una arquitectura orientada a servicios de forma eficiente, es necesario tener en cuenta una serie de conceptos y estrategias de diseño:
+Para implementar una arquitectura orientada a servicios de forma eficiente, es necesario tener en cuenta una serie de conceptos y estrategias de diseño~\cite{ibmsoa}:
 \begin{itemize}
-\item Tener claro un \textbf{conjunto de servicios} que se quieran proveer a nuestros clientes o incluso de forma interna en la organización.
+\item Tener claro un \textbf{conjunto de servicios} con unos objetivos bien definidos que se quieran proveer a nuestros clientes o incluso de forma interna a la organización.
 \item Añadir una serie de procesos de \textbf{orquestación}, \textbf{balanceo de cargas} y de \textbf{recolección de métricas} para asegurar el buen funcionamiento de los mismos.
 \item Aplicar un conjunto de patrones de diseño que permita realizar un \textbf{diseño modular}, que tenga una buena \textbf{encapsulación} de los componentes, que asegure el \textbf{aislamiento}, la \textbf{reusabilidad} y la \textbf{escalabilidad}.
-\item Utilizar un modelo de programación compatibles con diferentes estándares de comunicación y que sea soportado por múltiples tecnologías, por ejemplo, los \textbf{servicios REST}.
+\item Utilizar un modelo de programación compatible con diferentes lenguajes de programación y que sea soportado por múltiples tecnologías y estándares de comunicación, por ejemplo, los \textbf{servicios REST}.
 \end{itemize}
 
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{stateless.png}
-\caption{\label{fig:scomm}Peticiones del cliente con estado almacenado fuera de los componentes\cite{sless}.}
+\caption{\label{fig:scomm}Peticiones del cliente con estado almacenado fuera de los componentes. Más información sobre componentes sin estado en~\cite{sless}.}
 \end{figure}
 
 \subsection{Comunicación}\label{sec:intro}
-En una arquitectura orientada a servicios uno de los aspectos más importantes es la comunicación, ya sea entre los propios componentes de nuestra aplicación o los métodos de nuestra API que exponemos al público. Los servicios de una aplicación distribuída pueden estar alojados en diferentes máquinas, lo que hace necesario que el estado de nuestra aplicación sea almacenado de forma externa a los componentes, estos se conocen como \textbf{Stateless Components}  (puede verse un esquema en la Figura~\ref{fig:scomm}). Una de las técnicas más habituales para implementarlos es \textbf{incluir la información de estado en las peticiones} que recibe cada componente, otra forma de hacerlo sería transmitirla en los mensajes \emph{keepalive} enviados por los procesos de orquestación.
+En una arquitectura orientada a servicios uno de los aspectos más importantes es la comunicación, ya sea entre los propios componentes de nuestra aplicación o los métodos de nuestra API que exponemos al público. Los servicios de una aplicación distribuida pueden estar alojados en diferentes máquinas, lo que hace necesario que el estado de nuestra aplicación sea almacenado de forma externa a los componentes, estos se conocen como \textbf{Stateless Components}  (puede verse un esquema en la Figura~\ref{fig:scomm}). Una de las técnicas más habituales para implementarlos es \textbf{incluir la información de estado en las peticiones} que recibe cada componente, otra forma de hacerlo sería transmitirla en los mensajes \emph{keepalive} enviados por los procesos de orquestación.
 
 En este contexto que requiere una comunicación entre múltiples componentes sin ninguna comunicación previa de esquemas de datos, como sí era necesario con protocolos SOAP o XML, podemos destacar la utilidad de las APIs REST por las siguientes características:
 
@@ -184,6 +196,8 @@ En este contexto que requiere una comunicación entre múltiples componentes sin
 \item Ofrecen una gran \textbf{flexibilidad para transmitir diferentes tipos de datos}: html, json, text, xml, jpeg, etc.
 \end{itemize}
 
+Se puede encontrar una descripción detallada de las APIs REST y sus ventajas en el blog de desarrolladores de BBVA~\cite{restapi}.
+
 \subsection{Microservicios}\label{sec:micro}
 %\subsection{Subsections}\index{Section}
 \begin{figure}
@@ -192,25 +206,28 @@ En este contexto que requiere una comunicación entre múltiples componentes sin
 \caption{\label{fig:msv}Aplicación monolítica VS microservicios.}
 \end{figure}
 
-Las aplicaciones monolíticas se despliegan como un solo bloque de frontend, lógica de negocio y acceso a datos. Si existe un cuello de botella en sólo un elemento del sistema necesitaríamos desplegar varias instancias de la aplicación completa y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución pésima, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
+Las aplicaciones convencionales que se han desarrollado tradicionalmente para problemas tecnológico de cierta envergadura se despliegan como un solo bloque monolítico de \textit{frontend}, lógica de negocio y acceso a datos. Sin embargo, este diseño de arquitectura conlleva ciertas desventajas en el caso de necesitar escalar la capacidad de nuestra aplicación. En concreto, si existe un cuello de botella en sólo un elemento del sistema, necesitaríamos desplegar varias instancias completas de la aplicación y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución pésima, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
 
-Como se puede apreciar en la Figura~\ref{fig:msv}, las aplicaciones diseñadas usando microservicios permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas…). Los componentes pueden ser atómicos o compuestos, que agrupan varios dominios.
+El término de microservicios ha ganado una gran popularidad en los años recientes, se originó alrededor de 2014 y atrajo mucha atención hacia esta nueva forma de concebir la estructura de las aplicaciones. Puede aportar muchos beneficios si se hace uso del mismo para solucionar los problemas correctos y se comprende cuáles son sus ventajas y en qué casos sería mejor no usarlos. Uno de los riesgos que presenta construir una aplicación desde cero usando este patrón de diseño es que no sabemos exactamente cuales son los requisitos de nuestra aplicación hasta que no empezamos a producir prototipos y recibir retroalimentación de los clientes, además los equipos con poca experiencia tienen la tendencia de querer usar nuevas técnicas de desarrollo como esta sin conocerlas en profundidad y sin saber si se pueden aplicar a su dominio. A pesar de todo, una gran cantidad de proyectos se ha beneficiado del diseño con microservicios y muchas compañías han obtenido buenos resultados al migrar aplicaciones o partes de las mismas a esta nueva técnica de diseño. Considero que uno de los principales motivos del éxito de los microservicios es que presenta una gran sinergia con el paradigma del Cloud Computing, y permite hacer un diseño modular de la aplicación que facilita de forma natural la división de trabajo en un reparto con objetivos claros y sencillos, sobre los que se puede hacer \textit{testing} de forma sencilla y corregir errores sin afectar a otros componentes del sistema.
+
+Las aplicaciones que tienen una arquitectura basada en microservicios, como se puede apreciar en la Figura~\ref{fig:msv}, permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas…). Los componentes pueden ser atómicos o compuestos, que agrupan varios dominios. Más información sobre la ejecución distribuida de aplicaciones en microservicios se puede encontrar en~\cite{mservices}.
 
 Las principales ventajas que aportan el uso de microservicios son las siguientes:
 \begin{itemize}
 \item La división de las aplicaciones en microservicios nos permite hacer una mayor \textbf{reutilización de componentes} en otras aplicaciones. Varios proyectos suelen compartir una lógica de negocio o de acceso a datos similar, y el diseño modular de los microservicios nos aporta una gran flexibilidad para adaparlos a otros problemas.
 \item Como ya mencionamos anteriormente, aporta una gran \textbf{mejora en la escalabilidad del sistema} en función de nuestras necesidades.
-\item El proceso de \textbf{mantenimiento se simplifica} enormemente, ya que los componentes sin estado interno permiten reducir el acomplamiento y es más sencillo detectar y resolver los problemas en un único componente sin detener al completo el servicio.
+\item El proceso de \textbf{mantenimiento se simplifica} enormemente, ya que los componentes sin estado interno permiten reducir el acoplamiento y es más sencillo detectar y resolver los problemas en un único componente sin detener al completo el servicio.
 \item El sistema es \textbf{resistente a fallos} ya que, a diferencia de las aplicaciones monolíticas, el fallo de un componente no supone necesariamente el fallo de la aplicación.
 \end{itemize}
 
-Desplegar suele resultar el paso más complicado en este tipo de aplicaciones que en las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que suelen presentar interdependencias y , por lo tanto, requieren que se realice un orden de arranque concreto. Existe una serie de servicios de código abierto que permiten gestionar los diferentes microservicios y las interacciones que presentan. Algunos de los más usados pertenecen al framework Spring Cloud de Netflix:
+El proceso de despliegue suele resultar uno de los aspectos más complejos en este tipo de aplicaciones basadas en microservicios. El principal motivo es que, a diferencia de las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que presentan dependencias específicas entre sí. Por lo tanto, requieren que se realice el arranque del sistema un orden concreto. Para facilitar estas tareas, existe una serie de servicios de código abierto que permiten gestionar los diferentes microservicios y las interacciones que presentan. Algunos de los más usados (presentados por los conferenciantes) pertenecen al framework Spring Cloud de Netflix:
 \begin{itemize}
 \item Eureka: Service Discovery.
 \item Zuul: Proxy.
 \item Ribbon: Load Balancer.
 \end{itemize}
 
+Cabe destacar el rol que pueden aportar servicios de virtualización como docker en este ámbito, ya que a partir de la versión 1.12 incluye un sistema de orquestación de contenedores, conocido como \emph{Docker Swarm}, que permite definir y configurar la interconexión entre conjuntos de servicios de forma sencilla con archivos de definición. Esta herramienta, que se explicará en la siguiente sección, es esencial para la construcción de aplicaciones basadas en microservicios ya que permite tanto el desarrollo en tu máquina local como la conexión con múltiples proveedores cloud y el despliegue de tu aplicación usando drivers específicos para los principales proveedores (Amazon Web Services, Google Compute Engine, Microsoft Azure, OpenStack, etc.). Esta forma de desarrollo en base a contenedores Docker, facilita la automatización de gran parte del ciclo de vida Software y está íntimamente relacionada con las técnicas de integración continua y DevOps (se explicarán detalladamente en la sección ~\ref{sec:devops}): desarrollo local, \textit{testing}, integración de código de forma automática con servicios de control de versiones y despliegue en un servidor Cloud o privado mediante contenedores que tienen todas las dependencias necesarias satisfechas para que se ejecute la aplicación. Si queréis conocer a fondo los principios de diseño usando microservicios recomiendo un libro que me ha ayudado bastante a realizar este trabajo ya que trata la mayor parte de temas de los que he hablado, se trata de \cite{microbook}.
 
 
 \vspace{1cm}
@@ -223,7 +240,7 @@ Es una tecnología de virtualización que permite definir aplicaciones autoconte
 \caption{\label{fig:cont}Infraestructura de un contenedor.}
 \end{figure}
 
-A diferencia de las máquinas virtuales convencionales, las tecnologías de contenedores como Docker no incluyen un sistema operativo completo en su imágen, tan solo las librerías y configuraciones necesarias para su funcionamiento (se puede observar un esquema en la Figura~\ref{fig:cont}). Esto permite mejorar la eficiencia al no existir la sobrecarga que supone la interacción de las máquinsa virtuales con el sistema operativo huésped(guest), ya que Docker es capaz de realizar una interacción directa con el Kernel Linux de la máquina anfitrión(host).
+A diferencia de las máquinas virtuales convencionales, las tecnologías de contenedores como Docker no incluyen un sistema operativo completo en su imagen, tan solo las librerías y configuraciones necesarias para su funcionamiento (se puede observar un esquema en la Figura~\ref{fig:cont}). Esto permite mejorar la eficiencia al no existir la sobrecarga que supone la interacción de las máquinas virtuales con el sistema operativo huésped(guest), ya que Docker es capaz de realizar una interacción directa con el Kernel Linux de la máquina anfitrión(host).
 
 Algunas características destacadas sobre Docker en la conferencia son las siguientes: es portable, ligero, automatizable, autocontenido, aislado(ofrece entorno de desarrollo que se comporta a modo de \textit{sandbox}), agiliza el despliegue y el mantenimiento.
 
@@ -242,14 +259,14 @@ docker node inspect worker1 | grep IDdocker node update --label-add type=master 
 
 
 
-\section{DevOps}
+\section{DevOps}\label{sec:devops}
 %\todo[inline, color=green!40]{This is an inline comment.}
 
 Otro de los conceptos introducidos en la conferencia es el de DevOps (el término proviene del acrónimo inglés formado por \textit{Development y Operations}), es un concepto que ha atraído un interés creciente en el ámbito de la gestión de proyectos y la ingeniería del Software durante la última década. Recibe una gran influencia de las metodologías ágiles de desarrollo y propone una mejora de la comunicación entre los equipos de desarrollo y operaciones. A lo largo de la historia, se ha producido un conflicto entre ambos equipos que surge de forma natural de sus roles, en el área de desarrollo se intenta introducir nueva funcionalidad mientras que el equipo de operaciones crea estabilidad y se ocupa de resolver errores. 
 
 Las técnicas de DevOps se basan en la creación de una cultura común entre ambos equipos, que se aproveche al máximo de la automatización de procesos, la obtención de métricas que permita guiar la toma de decisiones y la integración de ambos equipos de forma que participen en todo el ciclo de vida del proyecto(diseño, desarrollo, mantenimiento…).
 
-Una de las herramientas más utilizadas para automatizar las actividades del ciclo de vida del Software es Jenkins. Esta herramienta permite definir tareas para automatizar el proceso de compilación, \textit{testing}, despliegue y recopilación de métricas. Otras herramientas que pueden de resultar de utilidad son SonarQube(Testing de calidad de código) y NexusOSS(Gestor de dependencias y artefactos).
+Una de las herramientas más utilizadas para automatizar las actividades del ciclo de vida del Software es Jenkins. Esta herramienta permite definir tareas para automatizar el proceso de compilación, \textit{testing}, despliegue y recopilación de métricas. Otras herramientas que pueden de resultar de utilidad son SonarQube(Análisis de calidad del código) y NexusOSS(Gestor de dependencias y artefactos).
 
 % -- TABLE --
 %\begin{table}
@@ -268,12 +285,16 @@ Una de las herramientas más utilizadas para automatizar las actividades del cic
 \begin{thebibliography}{1}
 %\bibitem{key} description. \href{https://...}{Enlace}
 \bibitem{cloudpatts}\textbf{Cloud Computing Patterns, Springer (2014)}. \textit{Fundamentals to Design, Build, and Manage Cloud Applications}. Authors: Christoph Fehling, Frank Leymann, Ralph Retter, Walter Schupeck and Peter Arbitter.
+\bibitem{cloudfunds}\textbf{The NIST definition of cloud computing (2011).} \textit{Mell P. and Grance T.}
+\bibitem{cloudview}\textbf{A view of cloud computing. Communications of the ACM (2010)}\textit{vol. 53, no 4, p. 50-58. ARMBRUST}, Michael, et al.
+\bibitem{microbook}\textbf{Building Microservices (2015, 1st edition). O'Reilly Media, Inc.} \textit{Designing fine-grained systems}. Author: Sam Newman.
 \bibitem{reliab}\href{https://blogs.microsoft.com/microsoftsecure/2012/09/12/fundamentals-of-cloud-service-reliability/}{Fundaments of Cloud Service Reliability}, Microsoft Secure Blog.
 \bibitem{zdwt}\href{http://cloudpatterns.org/design_patterns/zero_downtime}{Zero Downtime}, cloudpatterns.org.
 \bibitem{wscom}\href{http://www.service-architecture.com/articles/web-services/web_services_explained.html}{Web Services Explained} (Communication). service-architecture.com.
 \bibitem{ibmsoa}\href{https://www-01.ibm.com/software/solutions/soa/}{Service Oriented Architecture}: simply good design. ibm.com.
 \bibitem{sless}\href{http://www.cloudcomputingpatterns.org/stateless_component/}{Stateless Component, cloudcomputingpatterns.org}
 \bibitem{restapi}\href{https://bbvaopen4u.com/es/actualidad/api-rest-que-es-y-cuales-son-sus-ventajas-en-el-desarrollo-de-proyectos}{API REST: ventajas.}  bbvaopen4u.com.
+\bibitem{mservices}\href{https://martinfowler.com/articles/microservices.html}{Artículo sobre Microservicios y automatización}. Martin Fowler.
 \end{thebibliography}
 
 \end{document}
