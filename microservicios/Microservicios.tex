@@ -31,7 +31,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 \documentclass[12pt]{article}
-\usepackage[spanish]{babel}
+\usepackage[spanish, es-tabla]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -51,7 +51,13 @@
 	basicstyle=\ttfamily,
 	showstringspaces=false,
 	columns=fullflexible-
-}    	
+}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{lipsum}
+
+\newcommand\pro{\item[$+$]}
+\newcommand\con{\item[$-$]}
 
 \newcommand{\icon}[1]{\includegraphics[height=18pt]{#1}}
 \robustify{\icon}
@@ -192,7 +198,7 @@ En este contexto que requiere una comunicación entre múltiples componentes sin
 \begin{itemize}
 \item Representan un \textbf{protocolo cliente/servidor sin estado}.
 \item \textbf{ Facilitan la portabilidad} y la comunicación entre diferentes plataformas y lenguajes, ya que se basan en el \textbf{protocolo HTTP} y el uso de sus verbos: POST, GET, PUT y DELETE.
-\item Permiten \textbf{exponer recursos de forma sencilla} diferentes  mediante las URI (Unique Resource Identifier).
+\item Permiten \textbf{exponer recursos de forma sencilla} diferentes  mediante las URI (\textit{Unique Resource Identifier}).
 \item Ofrecen una gran \textbf{flexibilidad para transmitir diferentes tipos de datos}: html, json, text, xml, jpeg, etc.
 \end{itemize}
 
@@ -208,7 +214,7 @@ Se puede encontrar una descripción detallada de las APIs REST y sus ventajas en
 
 Las aplicaciones convencionales que se han desarrollado tradicionalmente para problemas tecnológico de cierta envergadura se despliegan como un solo bloque monolítico de \textit{frontend}, lógica de negocio y acceso a datos. Sin embargo, este diseño de arquitectura conlleva ciertas desventajas en el caso de necesitar escalar la capacidad de nuestra aplicación. En concreto, si existe un cuello de botella en sólo un elemento del sistema, necesitaríamos desplegar varias instancias completas de la aplicación y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución pésima, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
 
-El término de microservicios ha ganado una gran popularidad en los años recientes, se originó alrededor de 2014 y atrajo mucha atención hacia esta nueva forma de concebir la estructura de las aplicaciones. Puede aportar muchos beneficios si se hace uso del mismo para solucionar los problemas correctos y se comprende cuáles son sus ventajas y en qué casos sería mejor no usarlos. Uno de los riesgos que presenta construir una aplicación desde cero usando este patrón de diseño es que no sabemos exactamente cuales son los requisitos de nuestra aplicación hasta que no empezamos a producir prototipos y recibir retroalimentación de los clientes, además los equipos con poca experiencia tienen la tendencia de querer usar nuevas técnicas de desarrollo como esta sin conocerlas en profundidad y sin saber si se pueden aplicar a su dominio. A pesar de todo, una gran cantidad de proyectos se ha beneficiado del diseño con microservicios y muchas compañías han obtenido buenos resultados al migrar aplicaciones o partes de las mismas a esta nueva técnica de diseño. Considero que uno de los principales motivos del éxito de los microservicios es que presenta una gran sinergia con el paradigma del Cloud Computing, y permite hacer un diseño modular de la aplicación que facilita de forma natural la división de trabajo en un reparto con objetivos claros y sencillos, sobre los que se puede hacer \textit{testing} de forma sencilla y corregir errores sin afectar a otros componentes del sistema.
+El concepto de diseño basado en microservicios ha ganado una gran atención en los últimos años, se originó alrededor de 2014 y atrajo mucha atención hacia esta nueva forma de concebir la estructura de las aplicaciones. Puede aportar muchos beneficios si se hace uso del mismo para solucionar los problemas correctos y se comprende cuáles son sus ventajas y en qué casos sería mejor no usarlos. Uno de los riesgos que presenta construir una aplicación desde cero usando este patrón de diseño es que no sabemos exactamente cuales son los requisitos de nuestra aplicación hasta que no empezamos a producir prototipos y recibir retroalimentación de los clientes, además los equipos con poca experiencia tienen la tendencia de querer usar nuevas técnicas de desarrollo como esta sin conocerlas en profundidad y sin saber si se pueden aplicar a su dominio. A pesar de todo, una gran cantidad de proyectos se ha beneficiado del diseño con microservicios y muchas compañías han obtenido buenos resultados al migrar aplicaciones o partes de las mismas a esta nueva técnica de diseño. 
 
 Las aplicaciones que tienen una arquitectura basada en microservicios, como se puede apreciar en la Figura~\ref{fig:msv}, permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas…). Los componentes pueden ser atómicos o compuestos, que agrupan varios dominios. Más información sobre la ejecución distribuida de aplicaciones en microservicios se puede encontrar en~\cite{mservices}.
 
@@ -227,7 +233,7 @@ El proceso de despliegue suele resultar uno de los aspectos más complejos en es
 \item Ribbon: Load Balancer.
 \end{itemize}
 
-Cabe destacar el rol que pueden aportar servicios de virtualización como docker en este ámbito, ya que a partir de la versión 1.12 incluye un sistema de orquestación de contenedores, conocido como \emph{Docker Swarm}, que permite definir y configurar la interconexión entre conjuntos de servicios de forma sencilla con archivos de definición. Esta herramienta, que se explicará en la siguiente sección, es esencial para la construcción de aplicaciones basadas en microservicios ya que permite tanto el desarrollo en tu máquina local como la conexión con múltiples proveedores cloud y el despliegue de tu aplicación usando drivers específicos para los principales proveedores (Amazon Web Services, Google Compute Engine, Microsoft Azure, OpenStack, etc.). Esta forma de desarrollo en base a contenedores Docker, facilita la automatización de gran parte del ciclo de vida Software y está íntimamente relacionada con las técnicas de integración continua y DevOps (se explicarán detalladamente en la sección ~\ref{sec:devops}): desarrollo local, \textit{testing}, integración de código de forma automática con servicios de control de versiones y despliegue en un servidor Cloud o privado mediante contenedores que tienen todas las dependencias necesarias satisfechas para que se ejecute la aplicación. Si queréis conocer a fondo los principios de diseño usando microservicios recomiendo un libro que me ha ayudado bastante a realizar este trabajo ya que trata la mayor parte de temas de los que he hablado, se trata de \cite{microbook}.
+Cabe destacar el rol que pueden aportar servicios de virtualización como docker en este ámbito, ya que a partir de la versión 1.12 incluye un sistema de orquestación de contenedores, conocido como \emph{Docker Swarm}, que permite definir y configurar la interconexión entre conjuntos de servicios de forma sencilla con archivos de definición. Esta herramienta, que se explicará en la siguiente sección, es esencial para la construcción de aplicaciones basadas en microservicios ya que permite tanto el desarrollo en tu máquina local como la conexión con múltiples proveedores cloud y el despliegue de tu aplicación usando drivers específicos para los principales proveedores (Amazon Web Services, Google Compute Engine, Microsoft Azure, OpenStack, etc.). Si queréis conocer a fondo los principios de diseño usando microservicios recomiendo un libro que me ha ayudado bastante a realizar este trabajo ya que trata la mayor parte de temas de los que he hablado, se trata de \cite{microbook}.
 
 
 \vspace{1cm}
@@ -268,19 +274,49 @@ Las técnicas de DevOps se basan en la creación de una cultura común entre amb
 
 Una de las herramientas más utilizadas para automatizar las actividades del ciclo de vida del Software es Jenkins. Esta herramienta permite definir tareas para automatizar el proceso de compilación, \textit{testing}, despliegue y recopilación de métricas. Otras herramientas que pueden de resultar de utilidad son SonarQube(Análisis de calidad del código) y NexusOSS(Gestor de dependencias y artefactos).
 
-% -- TABLE --
-%\begin{table}
-%\centering
-%\begin{tabular}{l|r}
-%Item & Quantity \\\hline
-%Widgets & 42 \\
-%Gadgets & 13
-%\end{tabular}
-%\caption{\label{tab:widgets}An example table.}
-%\end{table}
 
 \section{Conclusiones}\label{sec:conclu}
 
+Me siento obligado a hacer una mención especial a los conferenciantes, ya que hicieron una exposición detallada tanto de la base teórica, como de la componente práctica del diseño de aplicaciones usando Docker, AWS y otros componentes de arquitecturas SOA de la suite de servicios de código abierto Netflix OSS. Realizaron una exposición muy interesante de los conceptos detrás de las arquitecturas basadas en microservicios y de diferentes técnicas que emplean las grandes empresas para automatizar el proceso de desarrollo. Aunque fue una charla de 3 horas, no se hizo nada larga y la gente estuvo atenta y participativa en todo momento. Me gustaría recomendar que en los próximos cursos del Master en Ingeniería Informática se repita esta conferencia pero en el horario de clase, ya que me ha parecido de las más interesantes y enriquecedoras de este año a pesar de haber sido una conferencia optativa de la semana de la informática.
+
+Según mi juicio, considero que uno de los principales motivos del éxito de los microservicios es que presenta una gran sinergia con el paradigma del Cloud Computing, y permite hacer un diseño modular de las aplicaciones que facilita de forma natural la división de trabajo en un reparto con objetivos claros y sencillos, sobre los que se puede hacer \textit{testing} de forma sencilla y corregir errores sin afectar a otros componentes del sistema.
+
+Creo que la tecnología de virtualización basada en contenedores Docker ha sido una de las mejores herramientas de código abierto que han surgido en los últimos tiempos, considero crítica su capacidad para interactuar directamente con el kernel Linux (mejorando en gran medida el rendimiento de servidores que alojan aplicaciones de múltiples clientes). Además, creo que el diseño de aplicaciones basadas en microservicios con Docker facilita la automatización de gran parte del ciclo de vida Software, y está íntimamente relacionado con las técnicas de integración continua y DevOps. Las ventajas que me parecen más relevantes son: 
+
+\begin{itemize}
+\item La flexibilidad derivada de satisfacer todas las dependencias de una aplicación y poder desplegarla sin preocupación alguna en cualquier servidor me parece tremendamente útil
+\item Facilita el desarrollo en un entorno local de pruebas totalmente aislado.
+\item Permite el la realización de pruebas y tests de unidad de funcionalidades bien definidas e independientes. Esto facilita en gran medida el reparto de trabajo entre diferentes equipos de desarrollo que pueden progresar en paralelo.
+\item La integración de código de forma automática con servicios de control de versiones con servicios como Jenkins y despliegue en un servidor Cloud o privado mediante contenedores que tienen todas las dependencias necesarias satisfechas para que se ejecute la aplicación.
+\end{itemize}
+
+\begin{table}
+\begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
+\toprule
+\hfil\bfseries Ventajas
+&
+\hfil\bfseries Inconvenientes
+\\\cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
+
+%% PROS, seperated by empty line or \par
+\begin{itemize}
+	\pro advantage 1
+	\pro advantage 2
+
+\end{itemize}
+&
+%% CONS, seperated by empty line or \par
+\begin{itemize}
+	\con disadvantage 1
+	\con disadvantage 2
+\end{itemize}
+
+\\\bottomrule
+\end{tabularx}
+\caption{Ventajas e inconvenientes de los microservicios.}
+\end{table}
+
+En resumen, creo que ha sido una de las mejores conferencias a las que he acudido este año, esto me ha motivado enormemente para buscar información y completar la base de conocimiento que se transmitió en la misma. A mi parecer, las tecnologías relacionadas con el Cloud Computing tienen una enorme proyección de futuro y es el deber de cualquier ingeniero que se precie conocer las bases del diseño de aplicaciones que proveen servicios a millones de personas en Internet, y que no van a parar de crecer en el futuro inmediato. 
 
 \begin{thebibliography}{1}
 %\bibitem{key} description. \href{https://...}{Enlace}
