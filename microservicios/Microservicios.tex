@@ -136,11 +136,14 @@ Este trabajo tiene como objetivo exponer y profundizar en los conceptos expuesto
 
 \section{Introducción}\label{sec:intro}
 
+
+En primer lugar, expondré diferentes conceptos que considero relevantes tanto en el campo del \emph{Cloud Computing} como en el diseño de aplicaciones empresariales que se ejecutan en servicios web, que en general presentan un alto grado de complejidad y número de componentes. 
+
 Durante la conferencia, se hizo especial hincapié en las necesidades de los clientes y las características que estos exigen en una aplicación de carácter empresarial que se ejecuta en la nube, aunque se mencionaron brevemente, más tarde encontré diferentes enlaces con más información sobre el tema en~\cite{reliab}. Los requisitos más destacados son los siguientes:
 
 \begin{itemize}
 \item \textbf{Fiabilidad}. El funcionamiento de las aplicaciones web está íntimamente relacionado con la imagen que las grandes empresas tienen en la sociedad, si una tienda de comercio electrónico se cae durante una hora puede suponer pérdidas millonarias para la empresa y acarrea el riesgo de que sus clientes dejen de confiar en ella y se pasen a la competencia. Debido a esto, los clientes esperan que su aplicación tenga el mínimo número de errores posibles. Uno de los aspectos más importantes en este sentido es que se haga un proceso meticuloso de \textit{testing} y validación antes de publicar una aplicación, priorizando las partes más críticas del sistema y que pueden suponer un cuello de botella para la misma.
-\item \textbf{Recuperación instantánea ante fallos} (\emph{Zero Down Time}~\cite{zdwt}). En caso de que la aplicación llegue a fallar, lo que es imposible de evitar al completo, es necesario minimizar el tiempo en el que no se provee un servicio. Asegurar un tiempo mínimo de recuperación supone un desafío importante cuando una máquina física actúa como el punto de fallo único de la aplicación. Sin embargo, el hecho de tener una aplicación desplegada en contenedores virtuales, nos facilita en gran medida asegurar un sistema tolerante a fallos. Este sistema debe constar de ciertas características, entre las que se destacan:
+\item \textbf{Recuperación instantánea ante fallos} (\emph{Zero Down Time}~\cite{zdwt}). En caso de que la aplicación llegue a fallar, lo que es imposible de evitar al completo, es necesario minimizar el tiempo en el que no se provee un servicio. Asegurar un tiempo mínimo de recuperación supone un desafío importante cuando una máquina física actúa como el punto de fallo único de la aplicación (\textit{Single Point of Failure}). Sin embargo, el hecho de tener una aplicación desplegada en contenedores virtuales, nos facilita en gran medida asegurar un sistema tolerante a fallos. Este sistema debe constar de ciertas características, entre las que se destacan:
 \begin{itemize}
 \item Disponer de un \textbf{cluster de máquinas} configurado.
 \item Aplicar técnicas de \textbf{replicación y balanceo de carga}.
@@ -159,22 +162,24 @@ Cómo se puede observar en la Figura~\ref{fig:zerodt}, cuando el servidor físic
 Este trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:cloud} se realizará una exposición de diferentes conceptos que se utilizan en \emph{Cloud Computing}. A continuación se introducirá el paradigma de las arquitecturas orientadas a servicios (SOA) en la Sección~\ref{sec:soa}. Más adelante se introducirá la herramienta de contenedores Docker (Sección~\ref{sec:docker}), con la que se pueden construir de forma sencilla diferentes tipos de aplicaciones basadas en microservicios. Tras esto, en la Sección~\ref{sec:devops} Para finalizar, en la Sección~\ref{sec:conclu} presentaré una serie de opiniones personales que se han originado a partir de la conferencia y de la investigación posterior realizada.
 
 \section{Cloud Computing}\label{sec:cloud}
-A continuación se presentarán diferentes conceptos utilizados en el diseño y construcción de aplicaciones que se ejecutan servicios alojados la nube, concepto que se refiere a el alquiler de servidores o servicios específicos a un proveedor externo en función de nuestras necesidades de cómputo, este paradigma es comúnmente conocido como \emph{Cloud Computing}. El Instituto Nacional de Estándares y Tecnología de Estados Unidos (NIST) publicó en 2002 una serie de principios de diseño y definiciones de Cloud Computing~\cite{cloudfunds}. Algunos de las propiedades esenciales que pueden variar de un proveedor de servicio a otro son las siguientes:
+A continuación se presentarán diferentes conceptos utilizados en el diseño y construcción de aplicaciones que se ejecutan servicios alojados la nube, concepto que se refiere a el alquiler de servidores o servicios específicos a un proveedor externo en función de nuestras necesidades de cómputo, este paradigma es comúnmente conocido como \emph{Cloud Computing}. El Instituto Nacional de Estándares y Tecnología de Estados Unidos (NIST) publicó en 2002 una serie de principios de diseño y definiciones de \emph{Cloud Computing}~\cite{cloudfunds}. Algunos de las propiedades esenciales que pueden variar de un proveedor de servicio a otro son las siguientes:
 
 \begin{itemize}
 \item \textbf{Servicio bajo demanda auto-escalable}. Un cliente obtiene unas capacidades de cómputo como tiempo de un servidor o almacenamiento en red en función de sus necesidades sin requerir interacción humana con el proveedor de servicio.
-\item \textbf{Acceso a conexión de alto ancho de banda}. Las capacidades del servicio ofrecidas a través de la red pueden ser accedidas mediante mecanismos estándar (habitualmente HTTP) y en plataformas heterogéneas (móviles, tablets, portátiles, servidores, etc.).
 \item \textbf{Disponibilidad de recursos}. Los recursos ofrecidos por el proveedor son ofrecidos a múltiples clientes, que comparten infraestructura pero cada uno dispone de una diferente asignación de recursos físicos y virtuales. Hay cierta sensación de incertidumbre en cuanto a la localización del servicio. Sin embargo, muchos proveedores permiten especificar a alto nivel la región, país o incluso \textit{datacenter} en el que se ejecutará la aplicación. En general, los clientes pueden escoger ente diferentes planes de pago, que permiten adaptar a nuestras necesidades la capacidad de almacenamiento, el tipo (HDD vs SSD), la memoria RAM, el procesador, el ancho de banda o incluso la arquitectura en la que se ejecutará nuestra aplicación (cada vez más proveedores permiten que nuestra aplicación haga uso de GPUs y otros aceleradores).
+\item \textbf{Servicio de conexión multiplataforma con un alto ancho de banda}. Pongamos el ejemplo de una pequeña o mediana empresa (incluso una grande para un proyecto con necesidades variables a lo largo del tiempo), el coste de adquirir y mantener un conjunto de servidores propios para desplegar una aplicación en muchas ocasiones no deriva un beneficio suficiente para rentabilizar la inversión. Sin embargo, las capacidades del servicio ofrecidas a través de la red por los proveedores Cloud se adaptan a tus necesidades, tienen una calidad de servicio similar a la de un ISP (\textit{Internet Service Providers}) y disponen de una infraestructura con un diseño de alta eficiencia energética. Además, se ocupan de toda la infraestructura y seguridad para que las aplicaciones sean accedidas mediante mecanismos estándar (HTTP) y en plataformas heterogéneas (móviles, tablets, portátiles, servidores, etc.).
 \item \textbf{Recolección de métricas}. Los sistemas Cloud controlan y optimizan automáticamente el uso de recursos a través de la recolección de diferentes métricas de rendimiento (ancho de banda, porcentaje de USO de CPU y disco, cuentas de usuario activas, etc.). Además, se suelen aportar diferentes herramientas de visualización como los \textit{dashboards}, que permiten a los usuarios tomar decisiones sobre el tipo de servicio que se ajusta más a sus necesidades.
 \end{itemize}
 
 En función del modelo de servicio que nos ofrezca cada proveedor, podemos clasificar los servicios Cloud en 3 clases fundamentales:
 
 \begin{itemize}
-\item \textbf{Software as a Service} (SaaS).
-\item \textbf{Platform as a Service} (PaaS).
-\item \textbf{Infrastructure as a Service} (IaaS).
+\item \textbf{Software as a Service} (SaaS). Este modelo representa a los servicios prestados por diferentes aplicaciones que se ejecutan en una infraestructura Cloud. Las aplicaciones pueden ser accedidas simultáneamente por múltiples clientes a través de un programa o un navegador (Ej. GitHub o Google Drive). Sin embargo, el consumidor no gestiona ni tiene el control de la infraestructura Cloud subyacente.
+\item \textbf{Platform as a Service} (PaaS). Los servicios prestados al cliente se basan en el uso de lenguajes, librerías, servicios y herramientas para crear y desplegar una aplicación en una infraestructura Cloud gestionada por el proveedor. En ocasiones el cliente puede ajustar la capacidad de cómputo y controlar ciertos parámetros pero no tiene permisos de \textit{root} sobre la infraestructura. Algunos ejemplos son Microsoft Azure\footnote{Microsoft, al igual que Amazon o Google, ofrece un conjunto muy amplio de servicios que pueden ser clasificados en varias categorías. Sin embargo, se destaca la integración que Azure ofrece con las aplicaciones escritas en .NET lo que lleva a que el centro de sus servicios Cloud sean las aplicaciones en C\#.} o Google App Engine. La opción más destacada de código abierto en este ámbito se trata de Red Hat OpenShift.
+\item \textbf{Infrastructure as a Service} (IaaS). Este tipo de servicio se centra en ofrecer a los clientes capacidad de procesamiento, almacenamiento, ancho de banda y otros recursos computacionales que pueden gestionarse a nivel del Sistema Operativo con control de \emph{root} y que habitualmente se encuentran en un entorno virtualizado aislado del resto de clientes a los que se provee de servicio. Algunos ejemplos son Amazon EC2 o Google Compute Engine.
 \end{itemize}
+
+Por otra parte, se pueden diferenciar varios modelos de despliegue en función de las condiciones de propiedad bajo las que se ofrece el servicio. Si la infraestructura se provee para un uso exclusivo de una única organización se trata de \emph{Private Cloud}, que puede ser propiedad de la organización o incluso ser gestionada por una diferente. También existe la posibilidad de que una comunidad de clientes que comparten ciertos objetivos (misión, requisitos de seguridad, políticas de cumplimiento de estándares, etc.) hagan uso de una misma infraestructura (\emph{Community Cloud}). Además, existen múltiples casos de infraestructuras públicas que se comparten por organizaciones académicas, gobiernos o conjuntos de empresas (\emph{Public Cloud}). Como se puede observar hay una gran variedad de modelos de propiedad y tipos de servicios; y, aunque existen múltiples alternativas, existen combinaciones de las diferentes clases que se conocen como \emph{Hybrid Cloud}.
 
 Para más información sobre este tema y una visión completa de los patrones de diseño que se utilizan en Cloud Computing, se puede consultar este recurso~\cite{cloudpatts}.
 
@@ -209,7 +214,7 @@ En este contexto que requiere una comunicación entre múltiples componentes sin
 
 Se puede encontrar una descripción detallada de las APIs REST y sus ventajas en el blog de desarrolladores de BBVA~\cite{restapi}.
 
-\subsection{Microservicios}\label{sec:micro}
+\section{Microservicios}\label{sec:micro}
 %\subsection{Subsections}\index{Section}
 \begin{figure}
 \centering
@@ -219,28 +224,31 @@ Se puede encontrar una descripción detallada de las APIs REST y sus ventajas en
 
 Las aplicaciones convencionales que se han desarrollado tradicionalmente para problemas tecnológico de cierta envergadura se despliegan como un solo bloque monolítico de \textit{frontend}, lógica de negocio y acceso a datos. Sin embargo, este diseño de arquitectura conlleva ciertas desventajas en el caso de necesitar escalar la capacidad de nuestra aplicación. En concreto, si existe un cuello de botella en sólo un elemento del sistema, necesitaríamos desplegar varias instancias completas de la aplicación y aplicar algún tipo de balanceo de carga para poder mejorar la latencia de respuesta. Esta es una solución pésima, ya que desperdicia recursos y no resulta eficiente para incrementar el rendimiento.
 
-Se pueden definir las arquitecturas basadas en microservicios
+Las arquitecturas basadas en microservicios se pueden definir como un estilo de desarrollo de aplicaciones que están formadas por conjuntos de servicios pequeños y con objetivos bien definidos, que se ejecutan en máquinas diferentes y emplean mecanismos de comunicación estándar y de baja latencia. Los microservicios habitualmente se exponen como un recurso a través de una API con verbos HTTP: GET, POST, etc. En general, cada microservicio responde a peticiones sobre un elemento en particular de la lógica de negocio y existen procesos de orquestación encargados de mantener el correcto funcionamiento del sistema y escalar el número de servicios disponibles en función de la demanda.
 
 El concepto de diseño basado en microservicios ha ganado una gran atención en los últimos años, se originó alrededor de 2014 y atrajo mucha atención hacia esta nueva forma de concebir la estructura de las aplicaciones. Puede aportar muchos beneficios si se hace uso del mismo para solucionar los problemas correctos y se comprende cuáles son sus ventajas y en qué casos sería mejor no usarlos. Uno de los riesgos que presenta construir una aplicación desde cero usando este patrón de diseño es que no sabemos exactamente cuales son los requisitos de nuestra aplicación hasta que no empezamos a producir prototipos y recibir retroalimentación de los clientes, además los equipos con poca experiencia tienen la tendencia de querer usar nuevas técnicas de desarrollo como esta sin conocerlas en profundidad y sin saber si se pueden aplicar a su dominio. A pesar de todo, una gran cantidad de proyectos se ha beneficiado del diseño con microservicios y muchas compañías han obtenido buenos resultados al migrar aplicaciones o partes de las mismas a esta nueva técnica de diseño. 
 
 Las aplicaciones que tienen una arquitectura basada en microservicios, como se puede apreciar en la Figura~\ref{fig:msv}, permiten escalar aquellas partes de la aplicación que representen un cuello de botella. Se basa en el concepto de arquitecturas SOA pero dividida aún más en cada dominio (Productos, Empleados, Ventas, etc.). Los componentes pueden ser atómicos o compuestos, que agrupan varios dominios. Más información sobre la ejecución distribuida de aplicaciones en microservicios se puede encontrar en~\cite{mservices}.
 
-Las principales ventajas que aportan el uso de microservicios son las siguientes:
+A continuación expondré algunas de las ventajas e inconvenientes del uso de microservicios que considero más relevantes:
 \begin{itemize}
-\item La división de las aplicaciones en microservicios nos permite hacer una mayor \textbf{reutilización de componentes} en otras aplicaciones. Varios proyectos suelen compartir una lógica de negocio o de acceso a datos similar, y el diseño modular de los microservicios nos aporta una gran flexibilidad para adaparlos a otros problemas.
+\item La división de las aplicaciones en microservicios nos permite hacer una mayor \textbf{reutilización de componentes} en otras aplicaciones. Varios proyectos suelen compartir una lógica de negocio o de acceso a datos similar, y el diseño modular de los microservicios nos aporta una gran flexibilidad para adaptarlos a otros problemas.
 \item Como ya mencionamos anteriormente, aporta una gran \textbf{mejora en la escalabilidad del sistema} en función de nuestras necesidades.
 \item El proceso de \textbf{mantenimiento se simplifica} enormemente, ya que los componentes sin estado interno permiten reducir el acoplamiento y es más sencillo detectar y resolver los problemas en un único componente sin detener al completo el servicio.
 \item El sistema es \textbf{resistente a fallos} ya que, a diferencia de las aplicaciones monolíticas, el fallo de un componente no supone necesariamente el fallo de la aplicación.
+\con Los programas distribuidos son más complejos de programar y depurar. Las llamadas a procedimientos remotos pueden ser lentas y producir fallos \footnote{En este contexto resulta de gran utilidad el uso de tecnologías de paso de mensajes resistentes a fallos como RabbitMQ o Apache Kafka.}.
+\con Mantener la consistencia de datos en un sistema distribuido no es una tarea trivial, especialmente si se requiere el uso de diferentes tipos de bases de datos.
+\con El desarrollo de aplicaciones basadas en microservicios presenta cierta complejidad de organización, ya que requiere de un equipo capaz de coordinarse y gestionar un gran número de servicios que se re-despliegan regularmente.
 \end{itemize}
 
-El proceso de despliegue suele resultar uno de los aspectos más complejos en este tipo de aplicaciones basadas en microservicios. El principal motivo es que, a diferencia de las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que presentan dependencias específicas entre sí. Por lo tanto, requieren que se realice el arranque del sistema un orden concreto. Para facilitar estas tareas, existe una serie de servicios de código abierto que permiten gestionar los diferentes microservicios y las interacciones que presentan. Algunos de los más usados (presentados por los conferenciantes) pertenecen al framework Spring Cloud de Netflix:
+El proceso de despliegue suele resultar uno de los aspectos más complejos en este tipo de aplicaciones basadas en microservicios. El principal motivo es que, a diferencia de las arquitecturas monolíticas convencionales, es necesario levantar múltiples servicios que presentan dependencias específicas entre sí. Por lo tanto, requieren que se realice el arranque del sistema un orden concreto. Para facilitar estas tareas, existe una serie de servicios de código abierto que permiten gestionar los diferentes microservicios y las interacciones que presentan. Algunos de los más usados (presentados por los conferenciantes) pertenecen al Framework Spring Cloud de Netflix:
 \begin{itemize}
 \item Eureka: Service Discovery.
 \item Zuul: Proxy.
 \item Ribbon: Load Balancer.
 \end{itemize}
 
-Cabe destacar el rol que pueden aportar servicios de virtualización como docker en este ámbito, ya que a partir de la versión 1.12 incluye un sistema de orquestación de contenedores, conocido como \emph{Docker Swarm}, que permite definir y configurar la interconexión entre conjuntos de servicios de forma sencilla con archivos de definición. Esta herramienta, que se explicará en la siguiente sección, es esencial para la construcción de aplicaciones basadas en microservicios ya que permite tanto el desarrollo en tu máquina local como la conexión con múltiples proveedores cloud y el despliegue de tu aplicación usando drivers específicos para los principales proveedores (Amazon Web Services, Google Compute Engine, Microsoft Azure, OpenStack, etc.). Si queréis conocer a fondo los principios de diseño usando microservicios recomiendo un libro que me ha ayudado bastante a realizar este trabajo ya que trata la mayor parte de temas de los que he hablado, se trata de \cite{microbook}.
+Cabe destacar el rol que pueden aportar servicios de virtualización como Docker en este ámbito, ya que a partir de la versión 1.12 incluye un sistema de orquestación de contenedores, conocido como \emph{Docker Swarm}, que permite definir y configurar la interconexión entre conjuntos de servicios de forma sencilla con archivos de definición. Esta herramienta, que se explicará en la siguiente sección, es esencial para la construcción de aplicaciones basadas en microservicios ya que permite tanto el desarrollo en tu máquina local como la conexión con múltiples proveedores Cloud y el despliegue de tu aplicación usando drivers específicos para los principales proveedores (Amazon Web Services, Google Compute Engine, Microsoft Azure, OpenStack, etc.). Si queréis conocer a fondo los principios de diseño usando microservicios recomiendo un libro que me ha ayudado bastante a realizar este trabajo ya que trata la mayor parte de temas de los que he hablado, se trata de \cite{microbook}.
 
 
 \vspace{1cm}
@@ -253,7 +261,7 @@ Es una tecnología de virtualización que permite definir aplicaciones autoconte
 \caption{\label{fig:cont}Infraestructura de un contenedor.}
 \end{figure}
 
-A diferencia de las máquinas virtuales convencionales, las tecnologías de contenedores como Docker no incluyen un sistema operativo completo en su imagen, tan solo las librerías y configuraciones necesarias para su funcionamiento (se puede observar un esquema en la Figura~\ref{fig:cont}). Esto permite mejorar la eficiencia al no existir la sobrecarga que supone la interacción de las máquinas virtuales con el sistema operativo huésped(guest), ya que Docker es capaz de realizar una interacción directa con el Kernel Linux de la máquina anfitrión(host).
+A diferencia de las máquinas virtuales convencionales, las tecnologías de contenedores como Docker no incluyen un sistema operativo completo en su imagen, tan solo las librerías y configuraciones necesarias para su funcionamiento (se puede observar un esquema en la Figura~\ref{fig:cont}). Esto permite mejorar la eficiencia al no existir la sobrecarga que supone la interacción de las máquinas virtuales con el sistema operativo huésped (guest), ya que Docker es capaz de realizar una interacción directa con el Kernel Linux de la máquina anfitrión (host).
 
 Algunas características destacadas sobre Docker en la conferencia son las siguientes: es portable, ligero, automatizable, autocontenido, aislado(ofrece entorno de desarrollo que se comporta a modo de \textit{sandbox}), agiliza el despliegue y el mantenimiento.
 
@@ -264,11 +272,7 @@ Con muchos contenedores pueden aparecer problemas de coordinación, para solucio
 \item Docker Swarm
 \end{itemize}
 
-\begin{itemize}[label=\textdollar]
-\item \begin{lstlisting}
-docker node inspect worker1 | grep IDdocker node update --label-add type=master 18yrb7m650umx738rtevojpqy
-\end{lstlisting}
-\end{itemize}
+\subsection{Manual técnico de Docker}
 
 
 
@@ -284,7 +288,7 @@ Una de las herramientas más utilizadas para automatizar las actividades del cic
 
 \section{Conclusiones}\label{sec:conclu}
 
-Me siento obligado a hacer una mención especial a los conferenciantes, ya que hicieron una exposición detallada tanto de la base teórica, como de la componente práctica del diseño de aplicaciones usando Docker, AWS y otros componentes de arquitecturas SOA de la suite de servicios de código abierto Netflix OSS. Realizaron una exposición muy interesante de los conceptos detrás de las arquitecturas basadas en microservicios y de diferentes técnicas que emplean las grandes empresas para automatizar el proceso de desarrollo. Aunque fue una charla de 3 horas, no se hizo nada larga y la gente estuvo atenta y participativa en todo momento. Me gustaría recomendar que en los próximos cursos del Master en Ingeniería Informática se repita esta conferencia pero en el horario de clase, ya que me ha parecido de las más interesantes y enriquecedoras de este año a pesar de haber sido una conferencia optativa de la semana de la informática.
+Me siento obligado a hacer una mención especial a los conferenciantes, ya que hicieron una exposición detallada tanto de la base teórica, como de la componente práctica del diseño de aplicaciones basadas en microservicios usando Docker, AWS y otros componentes de arquitecturas SOA de la suite de servicios de código abierto Netflix OSS. Realizaron una exposición muy interesante de los conceptos detrás de las arquitecturas basadas en microservicios y de diferentes técnicas que emplean las grandes empresas para automatizar el proceso de desarrollo. Aunque fue una charla de 3 horas, no se hizo nada larga y la gente estuvo atenta y participativa en todo momento. Me gustaría recomendar que en los próximos cursos del Máster en Ingeniería Informática se repita esta conferencia pero en el horario de clase, ya que me ha parecido de las más interesantes y enriquecedoras de este año a pesar de haber sido una conferencia optativa de la semana de la informática.
 
 Según mi juicio, considero que uno de los principales motivos del éxito de los microservicios es que presenta una gran sinergia con el paradigma del Cloud Computing, y permite hacer un diseño modular de las aplicaciones que facilita de forma natural la división de trabajo en un reparto con objetivos claros y sencillos, sobre los que se puede hacer \textit{testing} de forma sencilla y corregir errores sin afectar a otros componentes del sistema.
 
@@ -297,31 +301,7 @@ Creo que la tecnología de virtualización basada en contenedores Docker ha sido
 \item La integración de código de forma automática con servicios de control de versiones con servicios como Jenkins y despliegue en un servidor Cloud o privado mediante contenedores que tienen todas las dependencias necesarias satisfechas para que se ejecute la aplicación.
 \end{itemize}
 
-\begin{table}
-\begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
-\toprule
-\hfil\bfseries Ventajas
-&
-\hfil\bfseries Inconvenientes
-\\\cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
 
-%% PROS, seperated by empty line or \par
-\begin{itemize}
-	\pro advantage 1
-	\pro advantage 2
-
-\end{itemize}
-&
-%% CONS, seperated by empty line or \par
-\begin{itemize}
-	\con disadvantage 1
-	\con disadvantage 2
-\end{itemize}
-
-\\\bottomrule
-\end{tabularx}
-\caption{Ventajas e inconvenientes de los microservicios.}
-\end{table}
 
 En resumen, creo que ha sido una de las mejores conferencias a las que he acudido este año, esto me ha motivado enormemente para buscar información y completar la base de conocimiento que se transmitió en la misma. A mi parecer, las tecnologías relacionadas con el Cloud Computing tienen una enorme proyección de futuro y es el deber de cualquier ingeniero que se precie conocer las bases del diseño de aplicaciones que proveen servicios a millones de personas en Internet, y que no van a parar de crecer en el futuro inmediato. 
 
