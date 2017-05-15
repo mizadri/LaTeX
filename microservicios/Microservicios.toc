@@ -4,7 +4,8 @@
 \contentsline {section}{\numberline {3}Arquitectura orientada a servicios}{7}{section.3}
 \contentsline {subsection}{\numberline {3.1}Comunicaci\IeC {\'o}n}{8}{subsection.3.1}
 \contentsline {section}{\numberline {4}Microservicios}{9}{section.4}
-\contentsline {section}{\numberline {5}Docker \icon {docker.png}}{12}{section.5}
-\contentsline {subsection}{\numberline {5.1}Manual t\IeC {\'e}cnico de Docker}{14}{subsection.5.1}
-\contentsline {section}{\numberline {6}DevOps}{14}{section.6}
-\contentsline {section}{\numberline {7}Conclusiones}{14}{section.7}
+\contentsline {subsection}{\numberline {4.1}Gesti\IeC {\'o}n de datos descentralizada}{12}{subsection.4.1}
+\contentsline {section}{\numberline {5}Docker \icon {docker.png}}{14}{section.5}
+\contentsline {subsection}{\numberline {5.1}Manual pr\IeC {\'a}ctico de Docker}{15}{subsection.5.1}
+\contentsline {section}{\numberline {6}DevOps}{17}{section.6}
+\contentsline {section}{\numberline {7}Conclusiones}{17}{section.7}

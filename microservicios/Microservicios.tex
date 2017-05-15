@@ -156,7 +156,7 @@ Durante la conferencia, se hizo especial hincapié en las necesidades de los cli
 \end{figure}
 Cómo se puede observar en la Figura~\ref{fig:zerodt}, cuando el servidor físico A falla, se desencadena una migración del contenedor virtual al servidor B. Lo que debería ocurrir sin complicaciones en caso de que el volumen de datos compartido por red siga disponible y solo haya ocurrido un problema aislado en la máquina A. En general, el demonio encargado de vigilar el correcto funcionamiento de los nodos se denomina \textit{watchdog} y su funcionamiento se basa en el intercambio periódico de mensajes con los nodos del cluster para intercambiar información del estado del servicio (\textit{keepalive o hearbeat}).
 \item \textbf{Tiempo rápido de despliegue}. Uno de los problemas más extendidos en el ámbito de las aplicaciones empresariales de elevada complejidad es que la aplicación puede tener muchas dependencias entre diferentes componentes, lo que hace difícil realizar un despliegue limpio y sin errores. Se ponía como ejemplo el clásico problema de que en el entorno de desarrollo funciona todo perfectamente, pero cuando se traslada a producción deja de hacerlo y cada equipo le echa la culpa a otro.
-\item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos cloud o con soluciones de virtualización como Docker.
+\item \textbf{Escalabilidad}. Los servicios pueden recibir grandes picos de tráfico y deben ser capaces de responder ante los mismos sin errores. Es evidente que la optimización de cada componente de la aplicación es un aspecto importante, pero además se debe diseñar un sistema capaz de balancear la carga y aumentar la dedicación de recursos replicando sus unidades de cómputo para responder ante los incrementos en demanda. Esto es relativamente fácil de hacer en entornos Cloud o con soluciones de virtualización como Docker.
 \end{itemize}
 
 Este trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:cloud} se realizará una exposición de diferentes conceptos que se utilizan en \emph{Cloud Computing}. A continuación se introducirá el paradigma de las arquitecturas orientadas a servicios (SOA) en la Sección~\ref{sec:soa}. Más adelante se introducirá la herramienta de contenedores Docker (Sección~\ref{sec:docker}), con la que se pueden construir de forma sencilla diferentes tipos de aplicaciones basadas en microservicios. Tras esto, en la Sección~\ref{sec:devops} Para finalizar, en la Sección~\ref{sec:conclu} presentaré una serie de opiniones personales que se han originado a partir de la conferencia y de la investigación posterior realizada.
@@ -232,11 +232,11 @@ Las aplicaciones que tienen una arquitectura basada en microservicios, como se p
 
 A continuación expondré algunas de las ventajas e inconvenientes del uso de microservicios que considero más relevantes:
 \begin{itemize}
-\item La división de las aplicaciones en microservicios nos permite hacer una mayor \textbf{reutilización de componentes} en otras aplicaciones. Varios proyectos suelen compartir una lógica de negocio o de acceso a datos similar, y el diseño modular de los microservicios nos aporta una gran flexibilidad para adaptarlos a otros problemas.
-\item Como ya mencionamos anteriormente, aporta una gran \textbf{mejora en la escalabilidad del sistema} en función de nuestras necesidades.
-\item El proceso de \textbf{mantenimiento se simplifica} enormemente, ya que los componentes sin estado interno permiten reducir el acoplamiento y es más sencillo detectar y resolver los problemas en un único componente sin detener al completo el servicio.
-\item El sistema es \textbf{resistente a fallos} ya que, a diferencia de las aplicaciones monolíticas, el fallo de un componente no supone necesariamente el fallo de la aplicación.
-\con Los programas distribuidos son más complejos de programar y depurar. Las llamadas a procedimientos remotos pueden ser lentas y producir fallos \footnote{En este contexto resulta de gran utilidad el uso de tecnologías de paso de mensajes resistentes a fallos como RabbitMQ o Apache Kafka.}.
+\pro La división de las aplicaciones en microservicios nos permite hacer una mayor \textbf{reutilización de componentes} en otras aplicaciones. Varios proyectos suelen compartir una lógica de negocio o de acceso a datos similar, y el diseño modular de los microservicios nos aporta una gran flexibilidad para adaptarlos a otros problemas.
+\pro Como ya mencionamos anteriormente, aporta una gran \textbf{mejora en la escalabilidad del sistema} en función de nuestras necesidades.
+\pro El proceso de \textbf{mantenimiento se simplifica} enormemente, ya que los componentes sin estado interno permiten reducir el acoplamiento y es más sencillo detectar y resolver los problemas en un único componente sin detener al completo el servicio.
+\pro El sistema es \textbf{resistente a fallos} ya que, a diferencia de las aplicaciones monolíticas, el fallo de un componente no supone necesariamente el fallo de la aplicación.
+\con Los programas distribuidos son más complejos de programar y depurar. Las llamadas a procedimientos remotos pueden ser lentas y producir fallos. En este contexto resulta de gran utilidad el uso de tecnologías de paso de mensajes resistentes a fallos como RabbitMQ o Apache Kafka.
 \con Mantener la consistencia de datos en un sistema distribuido no es una tarea trivial, especialmente si se requiere el uso de diferentes tipos de bases de datos.
 \con El desarrollo de aplicaciones basadas en microservicios presenta cierta complejidad de organización, ya que requiere de un equipo capaz de coordinarse y gestionar un gran número de servicios que se re-despliegan regularmente.
 \end{itemize}
@@ -250,6 +250,19 @@ El proceso de despliegue suele resultar uno de los aspectos más complejos en es
 
 Cabe destacar el rol que pueden aportar servicios de virtualización como Docker en este ámbito, ya que a partir de la versión 1.12 incluye un sistema de orquestación de contenedores, conocido como \emph{Docker Swarm}, que permite definir y configurar la interconexión entre conjuntos de servicios de forma sencilla con archivos de definición. Esta herramienta, que se explicará en la siguiente sección, es esencial para la construcción de aplicaciones basadas en microservicios ya que permite tanto el desarrollo en tu máquina local como la conexión con múltiples proveedores Cloud y el despliegue de tu aplicación usando drivers específicos para los principales proveedores (Amazon Web Services, Google Compute Engine, Microsoft Azure, OpenStack, etc.). Si queréis conocer a fondo los principios de diseño usando microservicios recomiendo un libro que me ha ayudado bastante a realizar este trabajo ya que trata la mayor parte de temas de los que he hablado, se trata de \cite{microbook}.
 
+\subsection{Gestión de datos descentralizada}\label{sec:poly}
+
+La gestión de datos de forma descentralizada se presenta en diversas formas. A un nivel abstracto, se basa en la noción de que el modelo conceptual del mundo será diferente entre unos sistemas y otros. Este problema ocurre de forma habitual cuando se integran diferentes componentes en una gran compañía, el punto de vista de la gestión de productos y el carro de compra será muy diferente del sistema de recomendación o la gestión del soporte a los clientes. Mientras que las aplicaciones monolíticas prefieren una única base de datos relacional que incluso se comparten entre diferentes aplicaciones debido al elevado precio de las licencias, en el mundo de los microservicios es preferible que cada componente maneje su propia conexión con una base de datos, ya sean instancias de la misma base de datos o tecnologías completamente diferentes. Esta aproximación se conoce como \textbf{persistencia políglota}~\cite{poly} y se puede observar una esquema de su arquitectura en la Figura~\ref{fig:polyglot}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{decentralised-data.png}
+\caption{\label{fig:polyglot}BBDD de aplicación monolítica VS persistencia políglota.}
+\end{figure}
+
+Descentralizar la responsabilidad de la consistencia de datos entre diferentes servicios representa un reto para los desarrolladores, ya que se deben implementar diferentes técnicas que aseguren cierta atomicidad en las operaciones. Una posibilidad es la utilización de transacciones distribuidas, aunque impone ciertos problemas de acoplamiento al poder afectar a múltiples servicios y bloquear el sistema. En ocasiones, las necesidades de negocio llevan a preferir aceptar un cierto grado de inconsistencia para ser capaces de responder rápido a las peticiones. 
+
+La elección de tecnologías de almacenamiento no es un problema trivial de resolver, pero cada vez más la tendencia se dirige a usar ciertas bases de datos que brillan en resolver problemas concretos. Por ejemplo, las bases de datos noSQL aportan una gran flexibilidad para manejar catálogos de productos o colecciones de datos heterogéneos y no estructurados. En cambio, si queremos hacer un sistema de recomendación quizá sea más interesante disponer de un sistema de almacenamiento de datos que incorpore de forma nativa algoritmos de procesamiento de grafos (Neo4J). Una de las ventajas de los sistemas noSQL como MongoDB o Cassandra es que permiten su ejecución en clusters de máquinas distribuidas y son capaces de manejar volúmenes enormes de datos, distribuyendo la carga mediante replicación y \textit{sharding}.
 
 \vspace{1cm}
 \section{Docker \icon{docker.png}}\label{sec:docker}
@@ -272,9 +285,40 @@ Con muchos contenedores pueden aparecer problemas de coordinación, para solucio
 \item Docker Swarm
 \end{itemize}
 
-\subsection{Manual técnico de Docker}
+\subsection{Manual práctico de Docker}
+Para poder crear un grupo de máquinas y que se comuniquen entre sí en primer lugar debemos aprender a definir una imagen. Los contenedores Docker se ejecutan en base a una imagen que puede ser descargada del repositorio oficial de contenedores, conocido como Docker Hub. Además, podemos definirla y construirla nosotros mismos usando cualquier imagen existente como plantilla y añadiendo los componentes y librerías que necesitemos (se especifican en un archivo \texttt{Dockerfile}). Un ejemplo de este archivo sería el siguiente:
 
+\begin{lstlisting}
+FROM docker/whalesay:latest
+RUN apt-get -y update && apt-get install -y fortunes
+CMD /usr/games/fortune -a | cowsay
+\end{lstlisting}
 
+Podemos distinguir tres opciones fundamentales en este tipo de archivos:
+\begin{itemize}
+\item \textbf{FROM} nos permite especificar una imagen de Docker en la que basar la nuestra.
+\item \textbf{RUN} especifican diferentes comandos que necesitemos ejecutar para configurar el entorno de ejecución de nuestro contenedor (instalar librerías y dependencias). 
+\item \textbf{CMD} especifican los comandos que debe ejecutar el contenedor una vez arranca y se ha configurado. 
+\end{itemize}
+
+A continuación, es necesario construir la imagen que hemos definido a través del siguiente comando: "\texttt{docker build -t website .}". Tras esto, se puede ejecutar el contenedor\footnote{Cuando ejecutamos una imagen, Docker buscará primero si el repositorio local de nuestra máquina contiene alguna con el nombre dado y si no intentará descargarla de Docker Hub.} usando el siguiente comando: "\texttt{docker run website}".
+
+Al igual que hemos definido la composición de una imagen personalizada a través de un archivo, es posible definir la estructura de una aplicación y su interconexión a través de otro archivo (con extensión .yml o .yaml) y la herramienta Docker Compose. Si partimos de la base que ya hemos definido una imagen llamada "website" que contiene la lógica de presentación y control de nuestra aplicación web, podemos levantar esta imagen junto con su base de datos redis y definir los puertos en los que se conectan de la siguiente forma:
+
+\begin{lstlisting}
+website: 
+  build: . 
+  ports: 
+    - "5000:5000" 
+  volumes: 
+    - .:/code 
+  links: 
+    - redis 
+redis: 
+  image: redis
+\end{lstlisting}
+
+De esta forma, hemos definido una aplicación formada por dos contenedores. Uno llamado "website", que será construido a partir de un archivo \texttt{Dockerfile} que se encuentra en el directorio actual. También se configura el puerto en el que se expondrá la aplicación, el directorio de donde se añadirá el código de la misma y los otros contenedores con los que está enlazado; en este caso solo se relaciona con su base de datos redis, cuya imagen descargará del Docker Hub. Una vez hemos definido este archivo, podremos ejecutarlo con el comando "\texttt{docker-compose up}", que buscará el archivo \emph{docker-compose.yml} y ejecutará las imágenes que se indican en el mismo resolviendo las dependencias.
 
 \section{DevOps}\label{sec:devops}
 %\todo[inline, color=green!40]{This is an inline comment.}
@@ -295,15 +339,16 @@ Según mi juicio, considero que uno de los principales motivos del éxito de los
 Creo que la tecnología de virtualización basada en contenedores Docker ha sido una de las mejores herramientas de código abierto que han surgido en los últimos tiempos, considero crítica su capacidad para interactuar directamente con el kernel Linux (mejorando en gran medida el rendimiento de servidores que alojan aplicaciones de múltiples clientes). Además, creo que el diseño de aplicaciones basadas en microservicios con Docker facilita la automatización de gran parte del ciclo de vida Software, y está íntimamente relacionado con las técnicas de integración continua y DevOps. Las ventajas que me parecen más relevantes son: 
 
 \begin{itemize}
+\item Simplifica el proceso de configuración del entorno de desarrollo, permitiendo generar de forma sencilla a través de archivos de definición todas las dependencias necesarias.
 \item La flexibilidad derivada de satisfacer todas las dependencias de una aplicación y poder desplegarla sin preocupación alguna en cualquier servidor me parece tremendamente útil
 \item Facilita el desarrollo en un entorno local de pruebas totalmente aislado.
 \item Permite el la realización de pruebas y tests de unidad de funcionalidades bien definidas e independientes. Esto facilita en gran medida el reparto de trabajo entre diferentes equipos de desarrollo que pueden progresar en paralelo.
 \item La integración de código de forma automática con servicios de control de versiones con servicios como Jenkins y despliegue en un servidor Cloud o privado mediante contenedores que tienen todas las dependencias necesarias satisfechas para que se ejecute la aplicación.
 \end{itemize}
 
+De los materiales que he recogido, considero especialmente enriquecedores los artículos que he leído sobre aplicaciones que usan bases de datos heterogéneas~\cite{poly}. Especialmente el Framework Synapse~\cite{synapse}, que permite la integración de diversas bases de datos en una misma aplicación y ofrece al mismo tiempo diferentes garantías de consistencia, transaccionalidad y atomicidad en las operaciones. Esta herramienta permite incluir interfaces para acceder a bases de datos tan diferentes como PostgreSQL, MongoDB, Cassandra o Neo4J. Creo que uno de los aspectos más importantes en el mundo del \emph{Big Data} es la correcta elección del sistema de almacenamiento de datos para su posterior procesamiento, ya que cada uno responde a necesidades de negocio muy concretas.
 
-
-En resumen, creo que ha sido una de las mejores conferencias a las que he acudido este año, esto me ha motivado enormemente para buscar información y completar la base de conocimiento que se transmitió en la misma. A mi parecer, las tecnologías relacionadas con el Cloud Computing tienen una enorme proyección de futuro y es el deber de cualquier ingeniero que se precie conocer las bases del diseño de aplicaciones que proveen servicios a millones de personas en Internet, y que no van a parar de crecer en el futuro inmediato. 
+En resumen, creo que he disfrutado haciendo este trabajo, he aprendido muchos trucos de LaTeX y sin duda esta ha sido una de las mejores conferencias a las que he acudido este año, esto me ha motivado enormemente para buscar información y completar la base de conocimiento que se transmitió en la misma. A mi parecer, las tecnologías relacionadas con el Cloud Computing tienen una enorme proyección de futuro y es el deber de cualquier ingeniero que se precie conocer las bases del diseño de aplicaciones que proveen servicios a millones de personas en Internet, y que no van a parar de crecer en el futuro inmediato. 
 
 \begin{thebibliography}{1}
 %\bibitem{key} description. \href{https://...}{Enlace}
@@ -318,7 +363,8 @@ En resumen, creo que ha sido una de las mejores conferencias a las que he acudid
 \bibitem{ibmsoa}\href{https://www-01.ibm.com/software/solutions/soa/}{Service Oriented Architecture}: simply good design. ibm.com.
 \bibitem{sless}\href{http://www.cloudcomputingpatterns.org/stateless_component/}{Stateless Component, cloudcomputingpatterns.org}
 \bibitem{restapi}\href{https://bbvaopen4u.com/es/actualidad/api-rest-que-es-y-cuales-son-sus-ventajas-en-el-desarrollo-de-proyectos}{API REST: ventajas.}  bbvaopen4u.com.
-\bibitem{mservices}\href{https://martinfowler.com/articles/microservices.html}{Artículo sobre Microservicios y automatización}. Martin Fowler.
+\bibitem{mservices}\href{https://martinfowler.com/articles/microservices.html}{Artículo sobre Microservicios y automatización}. Martin Fowler's Blog.
+\bibitem{poly}\href{https://martinfowler.com/bliki/PolyglotPersistence.html#footnote-first-use}{Artículo sobre persistencia políglota}. Martin Fowler's Blog.
 \end{thebibliography}
 
 \end{document}
