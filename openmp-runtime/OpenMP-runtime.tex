@@ -1,0 +1,161 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University Assignment Title Page 
+% LaTeX Template
+% Version 1.0 (27/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+% Instructions for using this template:
+% This title page is capable of being compiled as is. This is not useful for 
+% including it in another document. To do this, you have two options: 
+%
+% 1) Copy/paste everything between \begin{document} and \end{document} 
+% starting at \begin{titlepage} and paste this into another LaTeX file where you 
+% want your title page.
+% OR
+% 2) Remove everything outside the \begin{titlepage} and \end{titlepage} and 
+% move this file to the same directory as the LaTeX file you wish to add it to. 
+% Then add \input{./title_page_1.tex} to your LaTeX file where you want your
+% title page.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\title{Title page with logo}
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+\documentclass[12pt]{article}
+\usepackage[spanish, es-tabla]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{makeidx}
+\usepackage[colorlinks=true,linkcolor=black,anchorcolor=black,citecolor=black,filecolor=black,menucolor=black,runcolor=black,urlcolor=blue]{hyperref}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{etoolbox}
+\usepackage{fancybox}
+\usepackage{enumitem}
+\usepackage{listings}
+\lstset{
+	language=sh,
+	breaklines=true,
+	breakatwhitespace=true,
+	basicstyle=\ttfamily,
+	showstringspaces=false,
+	columns=fullflexible-
+}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{lipsum}
+
+\newcommand\pro{\item[$+$]}
+\newcommand\con{\item[$-$]}
+
+\newcommand{\icon}[1]{\includegraphics[height=18pt]{#1}}
+\robustify{\icon}
+\makeindex
+\graphicspath{{./img/}}
+
+\begin{document}
+
+\renewcommand\indexname{Índice}
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Facultad de Informática}\\[1.5cm] % Name of your university/college
+\textsc{\large Adrián García García}\\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Estudio del runtime de OpenMP en sistemas AMP}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[2cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics[width=4cm,keepaspectratio]{logo.png}
+ 
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+
+
+\captionsetup[figure]{labelformat=empty,justification=raggedright,singlelinecheck=false}
+% Include image from images directory
+\begin{figure}[h]
+
+        \includegraphics[width=2cm,keepaspectratio]{cc-by-sa.png}
+        \label{fig:by-sa}
+        \caption{ This work is licensed under a \href{https://creativecommons.org/licenses/by/4.0/legalcode}{CC-BY-SA 4.0 License}.}
+
+\end{figure}
+
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\begin{abstract}
+Este trabajo tiene como objetivo evaluar el funcionamiento de OpenMP en sistemas multicore asimétricos y estudiar posibles alternativas para su mejora. La conferencia estaba orientada más hacia el paradigma de computación basado en tareas. Sin embargo, en el ámbito de investigación en el que participo junto al profesor Juan Carlos Sáez Alcaide, hemos comprobado que la gran mayoría de benchmarks de suites comerciales (SPEC, Minebench, etc.) hacen uso de directivas de paralelización tradicionales como \textit{#pragma parallel for}. Este tipo de parelización se realiza a través de la división del espacio de iteraciones en fragmentos de igual tamaño para cada hilo pero esta aproximación trae significativos problemas de justicia en los sistemas AMP, ya que sus cores funcionan a diferente frecuencia y pueden presentar características microarquitectónicas diversas (diferente tamaño de cache, ejecución en orden VS fuera de orden, etc.). Además, un hilo que se ejecuta en un core big generalmente termina antes su asignación de iteraciones y se bloquea en una barrera de sincronización mediante una espera activa para esperar a los otros hilos que se ejecutaban en cores small, esto supone un desperdicio de recursos. 
+\end{abstract}
+
+\section{Introducción}\label{sec:intro}
+
+
+
+\section{Conclusiones}\label{sec:conclu}
+
+
+\begin{thebibliography}{1}
+%\bibitem{key} description. \href{https://...}{Enlace}
+\bibitem{cloudpatts}\textbf{Cloud Computing Patterns, Springer (2014)}. \textit{Fundamentals to Design, Build, and Manage Cloud Applications}. Authors: Christoph Fehling, Frank Leymann, Ralph Retter, Walter Schupeck and Peter Arbitter.
+\bibitem{cloudfunds}\textbf{NIST definition of cloud computing (2011).} \textit{Mell P., Grance T.}
+\bibitem{cloudview}\textbf{A view of cloud computing. Communications of the ACM (2010)}\textit{vol. 53, no 4, p. 50-58. ARMBRUST}, Michael, et al.
+\bibitem{microbook}\textbf{Building Microservices (2015, 1st edition). O'Reilly Media, Inc.} \textit{Designing fine-grained systems}. Author: Sam Newman.
+\bibitem{synapse}\textbf{Synapse: a microservices architecture for heterogeneous-database web applications (2015).}\textit{Viennot, Nicolas, et al. Proceedings of the Tenth European Conference on Computer Systems. ACM.}\href{https://github.com/nviennot/synapse}{ Proyecto en Github}. \href{http://viennot.com/synapse.pdf}{Paper}.
+\bibitem{reliab}\href{https://blogs.microsoft.com/microsoftsecure/2012/09/12/fundamentals-of-cloud-service-reliability/}{Fundaments of Cloud Service Reliability}, Microsoft Secure Blog.
+\bibitem{zdwt}\href{http://cloudpatterns.org/design_patterns/zero_downtime}{Zero Downtime}, cloudpatterns.org.
+\bibitem{wscom}\href{http://www.service-architecture.com/articles/web-services/web_services_explained.html}{Web Services Explained} (Communication). service-architecture.com.
+\bibitem{ibmsoa}\href{https://www-01.ibm.com/software/solutions/soa/}{Service Oriented Architecture}: simply good design. ibm.com.
+\bibitem{sless}\href{http://www.cloudcomputingpatterns.org/stateless_component/}{Stateless Component, cloudcomputingpatterns.org}
+\bibitem{restapi}\href{https://bbvaopen4u.com/es/actualidad/api-rest-que-es-y-cuales-son-sus-ventajas-en-el-desarrollo-de-proyectos}{API REST: ventajas.}  bbvaopen4u.com.
+\bibitem{mservices}\href{https://martinfowler.com/articles/microservices.html}{Artículo sobre Microservicios y automatización}. Martin Fowler's Blog.
+\bibitem{poly}\href{https://martinfowler.com/bliki/PolyglotPersistence.html#footnote-first-use}{Artículo sobre persistencia políglota}. Martin Fowler's Blog.
+\end{thebibliography}
+
+\end{document}
