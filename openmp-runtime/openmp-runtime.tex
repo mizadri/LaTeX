@@ -142,7 +142,7 @@
 
 Este trabajo tiene como objetivo realizar una instrumentación del runtime de OpenMP para permitir la recolección de métricas de rendimiento en los programas que hacen uso de esta API de paralelización. La conferencia relacionada con este trabajo estaba orientada más hacia el paradigma de computación basado en tareas y la paralización de diferentes programas que se ejecutan en procesadores simétricos convencionales. Sin embargo, en el ámbito de investigación en el que participo junto al profesor Juan Carlos Sáez Alcaide hemos observado que la gran mayoría de benchmarks multihilo de suites comerciales (SPEC, PARSEC, Minebench, etc.) hacen uso de directivas de paralelización convencionales como \textit{\#pragma parallel for}. Con el objetivo de evaluar el rendimiento de estos benchmarks, he realizado una instrumentación del runtime de OpenMP y más adelante presentaré un caso de estudio para exponer diferentes retos que debe afrontar su runtime en sistemas multicore asimétricos (AMP). 
 
-La parelización basada en directivas de compilación que reparten el trabajo de los bucles realiza una división del espacio de iteraciones en fragmentos de igual tamaño para cada hilo. No obstante, esta aproximación trae significativos problemas de justicia en los sistemas AMP, ya que sus cores funcionan a diferente frecuencia y pueden presentar características microarquitectónicas diversas (diferentes tamaños de cache, ejecución en orden o fuera de orden, etc.). Estas diferencias provocan que un hilo que se ejecuta en un core big generalmente termine antes su asignación de trabajo. Tras esto se suele bloquear en una barrera de memoria a través de una espera activa con el objetivo de sincronizarse con el resto de hilos que se ejecutaban en cores small. Esta situación representa un desperdicio de recursos debido a dos causas principales:
+La parelización basada en directivas de compilación que reparten el trabajo de los bucles realiza una división del espacio de iteraciones en fragmentos de igual tamaño para cada hilo. No obstante, esta aproximación trae significativos problemas de justicia en los sistemas AMP, ya que sus cores funcionan a diferente frecuencia y pueden presentar características microarquitectónicas diversas (diferentes tamaños de cache, ejecución en orden o fuera de orden, etc.). Estas diferencias provocan que un hilo que se ejecuta en un core big generalmente termine antes su asignación de trabajo. Tras esto se suele bloquear en una barrera de memoria a través de una espera activa con el objetivo de sincronizarse con el resto de hilos que se ejecutaban en cores small. Considero que esta situación representa un desperdicio de recursos debido a dos motivos principales:
 
 \begin{itemize}
 	\item Los sistemas operativos de propósito general no son capaces de identificar a los hilos que realizan una espera activa y, por tanto, no pueden intercambiar estos hilos por otros que sean capaces de realizar un uso efectivo de los cores.
@@ -152,7 +152,7 @@ La parelización basada en directivas de compilación que reparten el trabajo de
 
 Con el objetivo de recoger información de diferentes métricas de rendimiento he elegido utilizar PMCTrack, se trata de una herramienta de monitorización del rendimiento a través de contadores hardware para Linux. Esta herramienta ha sido diseñada especialmente para ayudar a los desarrolladores del kernel en la implementación de algoritmos de planificación que utilizen los datos de los contadores de monitorización del rendimiento (Performance Monitoring Counters - PMCs) para realizar optimizaciones en tiempo de ejecución. A pesar de ser una herramienta orientada al sistema operativo, PMCTrack también está equipada con una serie de componentes en espacio de usuario (bibliotecas, entorno gráfico y de línea de comandos) que permiten obtener información de monitorización de aplicaciones en ejecución. En este trabajo se utilizará la biblioteca de PMCTrack para instrumentar el código del runtime de OpenMP y poder recoger diferentes métricas de los bucles paralelizados con este framework.
 
-Para la realización de este trabajo se ha empleado la placa de desarrollo Odroid XU4 \cite{odroid-manual}, el principal motivo de su elección es que incorpora un procesador multicore asimétrico y, además, ya tenía experiencia trabajando con ella en el Trabajo de Fin de Grado y anteriores investigaciones. Esta placa está provista de un SoC(\emph{System-On-Chip}) Exynos 5422 de Samsung fabricado en 28nm, que integra un procesador ARM big.LITTLE de ocho núcleos. Estos se dividen en dos clusters, cuatro cores Cortex A15 (2GHz) con ejecución fuera de orden y 2MB de último nivel de cache (L2) y otros cuatro cores Cortex A7 (1.4GHz) con ejecución en orden y 512KB de LLC (L2). Ambos comparten espacio de direcciones para acceder a una memoria principal DDR3 a 750 MHz de 2GB. Para mayor detalle, la figura \ref{fig:diagramaDeBloquesXU4} muestra el diagrama de bloques de la placa Odroid XU4.
+Para la realización de este trabajo se ha empleado la placa de desarrollo Odroid XU4 \cite{odroid-manual}, el principal motivo de su elección es que incorpora un procesador multicore asimétrico y, además, ya contaba con experiencia trabajando con ella en el Trabajo de Fin de Grado y anteriores investigaciones. Esta placa está provista de un SoC(\emph{System-On-Chip}) Exynos 5422 de Samsung fabricado en 28nm, que integra un procesador ARM big.LITTLE de ocho núcleos. Estos se dividen en dos clusters, cuatro cores Cortex A15 (2GHz) con ejecución fuera de orden y 2MB de último nivel de cache (L2) y otros cuatro cores Cortex A7 (1.4GHz) con ejecución en orden y 512KB de LLC (L2). Ambos comparten espacio de direcciones para acceder a una memoria principal DDR3 a 750 MHz de 2GB. Para mayor detalle, la figura \ref{fig:diagramaDeBloquesXU4} muestra el diagrama de bloques de la placa Odroid XU4.
 
 \begin{figure}[tbp]
     \centering
@@ -169,17 +169,17 @@ Para la realización de este trabajo se ha empleado la placa de desarrollo Odroi
 \end{figure}
 
 
+El resto del trabajo está estructurado de la siguiente forma, en la Sección~\ref{sec:expent} se describe de forma detallada el entorno experimental y los pasos seguidos para su construcción. En primer lugar, se explica cómo usar un compilador cruzado y por qué es necesario en la Sección \ref{sec:crucomp}. A continuación, en la Sección~\ref{sec:instrum} se describe el proceso seguido para instrumentar el runtime de OpenMP y en qué partes del código fue necesario introducir llamadas a la librería de PMCTrack para recoger métricas de la paralelización de bucles en tiempo de ejecución. Más adelante, en la Sección~\ref{sec:recolecc} se expone la forma de activar la instrumentación para ejecutar un benchmark y medir el rendimiento de su ejecución con diferentes métricas. Por último, en la Sección~\ref{sec:results} se presentan los resultados obtenidos al instrumentar la ejecución de benchmarks paralelos en la placa Odroid XU4 y en la Sección~\ref{sec:conclu} se exponen las conclusiones que he obtenido de este trabajo.
 
+\section{Entorno experimental}\label{sec:expent}
 
-\section{Entorno experimental}
+\subsection{Construcción de un compilador cruzado}\label{sec:crucomp}
 
-\subsection{Construcción de un compilador cruzado}
+\subsection{Instrumentación del runtime de OpenMP}\label{sec:instrum}
 
-\subsection{Instrumentación del runtime de OpenMP}
+\subsection{Recolección de métricas}\label{sec:recolecc}
 
-\subsection{Recolección de métricas}
-
-\section{Resultados}
+\section{Resultados}\label{sec:results}
 
 \section{Conclusiones}\label{sec:conclu}
 
