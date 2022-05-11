@@ -68,8 +68,8 @@
 
 \section{Employment history}
 % \cventry{year--year}{Job title}{Employer}{City}{}{Description line 1\newline{}Description line 2}
-\cventry{Mar'21-Now}{Backend Software Developer}{MonetDB Solutions}{Amsterdam}{}{I am mostly devoted to query optimization and benchmarking our columnar database system versus other relevant SQL players like Postgres, MySQL or Clickhouse. I also work with docker to test deployment to cloud platforms and how different DBs perform when virtualized.}.
-\cventry{Apr'18-Dec'21}{PhD scolarship (UCM)}{Department of Compuer Architecture and Automatics}{Madrid}{}{"Contention-aware scheduling and resource management for emerging multicore architectures": the main proposals were implemented in Linux kernel modules (C), but most of the experimental analysis and performance metrics was done in python (pandas/matlotlib), as well as some cluster parallelization (ipyparallel)}.
+\cventry{Mar'22-Now}{Backend Software Developer}{MonetDB Solutions}{Amsterdam}{}{Benchmarked MonetDB columnar database versus other relevant DBMS like Postgres, MySQL or Clickhouse, rewritting SQL queries to adapt to different syntaxes and optimize performance. Also measured the overhead of different DBMS when running on top of docker.}
+\cventry{Apr'18-Dec'21}{PhD scolarship (UCM)}{Department of Computer Architecture and Automatics}{Madrid}{}{Optimizing fairness and performance through scheduling and cache partitioning in Linux kernel modules. To compare different partitioning algorithms, we proposed an open-source simulator that seeks the optimal cache partitioning solution leveraging an ad-hoc B\&B algorithm and ipyparallel/sklearn.}.
 \cventry{Oct'17-Oct'18}{System Administrator}{UCM: Department of Compuer Architecture and Automatics}{Madrid}{}{Administrated multiple Linux systems and maintained the physical and virtualized infraestructure (kvm).}
 \cventry{Nov'16-Jun'17}{Collaboration fellowship by Spanish MECD}{Seven months researching and working for the Department of Computer Architecture and Automatics}{}{Madrid}{}{}
 \cventry{Apr'16-Aug'16}{Internship in Software Developement}{SATEC}{Madrid}{}{Developed web applications in C\# (.NET MVC), Razor and jQuery UI. Specifically, I contributed to build a web application for the government car management system.}
@@ -106,31 +106,36 @@
 \cventry{}{Programming languages}{}{}{}{\begin{itemize}
 \item \textbf{Python}: scikit-learn, pandas, numpy, matplotlib, ipyparallel.
 \smallskip
+\item \textbf{Big Data}: Spark, Map Reduce, Hadoop File System.
+\smallskip\item \textbf{Machine Learning} ({\color{blue}\href{https://github.com/mizadri/big-data}{python implementations}}):
+  \begin{itemize}
+    \item Classification tree (ID3).
+    \item Complete Index (data compression: variable-bytes, elias-gamma or elias-delta).
+    \item Vectorial Index.
+    \item Naive Bayes.
+  \end{itemize}
 \item \textbf{C/C++}: Kernel modules (drivers/scheduling), OpenGL, OpenMP/MPI, Sockets.
 \smallskip
 \item \textbf{Java}: Android app developement ({\color{blue}\href{https://github.com/android-fridge/thefridge}{TheFridge}}), Hibernate, JSP, Maven.
 \smallskip
-\item \textbf{Web}: PHP, C\# ASP.NET MVC (Razor), JavaScript, CSS (Boostrap).
+\item \textbf{Web}: PHP, C\# ASP.NET MVC (Razor), JavaScript (jQuery), CSS (Boostrap).
 \smallskip
 \item \textbf{Functional Programming}: Erlang, Maude.
 \smallskip\end{itemize}}
 \cventry{}{Other technologies}{}{}{}{\begin{itemize}
 \item \textbf{Databases}: SQL, MongoDB, Neo4J.
 \smallskip
-\item \textbf{Big Data}: Spark, Map Reduce, Hadoop File System.
-\smallskip\item \textbf{Machine Learning} ({\color{blue}\href{https://github.com/mizadri/big-data}{python implementations}}):
-  \begin{itemize}
-    \item Classification trees (ID3).
-    \item Complete Index (data compression: variable-bytes, elias-gamma or elias-delta).
-    \item Vectorial Index.
-    \item Naive Bayes.
-  \end{itemize}
 \item \textbf{Network management and virtualization}
 \begin{itemize}
   \item Persistent network configuration IPv4/IPv6 (\textit{vtysh}).
   \item Virtual machine management in servers with kvm (\textit{virsh} y \textit{virt-manager}).
   \item Docker.
-  \item Firewall deployment and network analysis skills (wireshark/IDS)
+\end{itemize}
+\smallskip
+\item \textbf{Security}
+\begin{itemize}
+  \item Penetration testing and tools (metasploit/JTR/hping3/nmap).
+  \item Firewall (iptables), network analysis (wireshark) and IDS (snort).
 \end{itemize}
 \smallskip
 \end{itemize}}
