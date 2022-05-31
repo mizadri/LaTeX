@@ -1,0 +1,132 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+% Awesome CV LaTeX Template for Cover Letter
+%
+% This template has been downloaded from:
+% https://github.com/posquit0/Awesome-CV
+%
+% Authors:
+% Claud D. Park <posquit0.bj@gmail.com>
+% Lars Richter <mail@ayeks.de>
+%
+% Template license:
+% CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+%
+
+
+%-------------------------------------------------------------------------------
+% CONFIGURATIONS
+%-------------------------------------------------------------------------------
+% A4 paper size by default, use 'letterpaper' for US letter
+\documentclass[11pt, a4paper]{awesome-cv}
+
+% Configure page margins with geometry
+\geometry{left=1.4cm, top=.8cm, right=1.4cm, bottom=1.8cm, footskip=.5cm}
+
+% Specify the location of the included fonts
+\fontdir[fonts/]
+
+% Color for highlights
+% Awesome Colors: awesome-emerald, awesome-skyblue, awesome-red, awesome-pink, awesome-orange
+%                 awesome-nephritis, awesome-concrete, awesome-darknight
+\colorlet{awesome}{awesome-red}
+% Uncomment if you would like to specify your own color
+% \definecolor{awesome}{HTML}{CA63A8}
+
+% Colors for text
+% Uncomment if you would like to specify your own color
+% \definecolor{darktext}{HTML}{414141}
+% \definecolor{text}{HTML}{333333}
+% \definecolor{graytext}{HTML}{5D5D5D}
+% \definecolor{lighttext}{HTML}{999999}
+
+% Set false if you don't want to highlight section with awesome color
+\setbool{acvSectionColorHighlight}{true}
+
+% If you would like to change the social information separator from a pipe (|) to something else
+\renewcommand{\acvHeaderSocialSep}{\quad\textbar\quad}
+
+
+%-------------------------------------------------------------------------------
+%	PERSONAL INFORMATION
+%	Comment any of the lines below if they are not required
+%-------------------------------------------------------------------------------
+% Available options: circle|rectangle,edge/noedge,left/right
+%\photo[left, noedge]{selfieS}
+\name{Adrian}{Garcia}
+\position{PhD in Computer Science}
+%\address{C/La Diligencia 4, D 4B, 28018, Madrid, Spain.}
+
+\mobile{(+34) 639570909}
+\email{mizadri.gg@gmail.com}
+\github{mizadri}
+\linkedin{mizadri}
+% \gitlab{gitlab-id}
+% \stackoverflow{SO-id}{SO-name}
+% \twitter{@twit}
+% \skype{skype-id}
+% \reddit{reddit-id}
+% \medium{madium-id}
+% \googlescholar{googlescholar-id}{name-to-display}
+%% \firstname and \lastname will be used
+% \googlescholar{googlescholar-id}{}
+% \extrainfo{extra informations}
+
+\quote{``Be the change that you want to see in the world."}
+
+
+%-------------------------------------------------------------------------------
+%	LETTER INFORMATION
+%	All of the below lines must be filled out
+%-------------------------------------------------------------------------------
+% The company being applied to
+%\recipient
+%  {Company Recruitment Team}
+%  {Google Inc.\\1600 Amphitheatre Parkway\\Mountain View, CA 94043}
+% The date on the letter, default is the date of compilation
+\recipient{\mbox{}}{}
+% The title of the letter
+\lettertitle{Dear recruiter,}
+% How the letter is opened
+% How the letter is closed
+\letterclosing{Sincerely,}
+% Any enclosures with the letter
+\letterenclosure[Attached]{Curriculum Vitae}
+
+
+%-------------------------------------------------------------------------------
+\begin{document}
+
+% Print the header with above personal informations
+% Give optional argument to change alignment(C: center, L: left, R: right)
+\makecvheader[R]
+
+% Print the footer with 3 arguments(<left>, <center>, <right>)
+% Leave any of these blank if they are not needed
+\makecvfooter
+  {}
+  {Adrian Garcia~~~·~~~Cover Letter}
+  {}
+
+% Print the title with above letter informations
+%\makeletter
+%-------------------------------------------------------------------------------
+%	LETTER CONTENT
+%-------------------------------------------------------------------------------
+\begin{cvletter}
+
+\textbf{Dear Hiring Manager,}
+
+I am a highly curious and motivated individual that is looking for job opportunities that allow me to grow as a professional and as a person, I am looking forward to apply my researching and learning skills to real world challenges, where the software we create actually makes a difference. My main motivation applying for this job is to pursue an exciting career path I always wanted to explore, extracting knowledge from data while applying machine learning techniques. My dream job is a place where team work is encouraged, where there’s always new technical problems to solve, amazing people to learn from and where the company culture values diversity and actually cares for the employee’s happiness.
+
+During my Master’s degree, I implemented some machine learning algorithms in Python and gained some experience with MapReduce/Spark ({\color{blue}\href{https://github.com/mizadri/big-data}{git}}). During my thesis, I also have worked with sk-learn (applying clustering algorithms like k-means) and numpy/ipyparallel to look for the optimal cache partitioning solution using a B\&B approach; I also used WEKA to explore methods of estimating the Slowdown that threads suffer from sharing the system with different runtime metrics gathered with PMCs. Most of the experimental analyses for research papers and data cleaning was done in Jupyther Notebooks, calculating different runtime metrics with pandas and building visualizations with matplotlib. 
+
+\end{cvletter}
+
+
+%-------------------------------------------------------------------------------
+% Print the signature and enclosures with above letter informations
+\makeletterclosing
+
+\end{document}
+

@@ -9,7 +9,7 @@
 \moderncvstyle{classic}
 \firstname{Font}
 \familyname{Size}
-
+\usepackage{ifsym}
 \usepackage{lastpage}
 %\rfoot{\addressfont\itshape\textcolor{gray}{\thepage\ / \pageref{LastPage} }}
 \rfoot{\addressfont\itshape\textcolor{gray}{\thepage\ / \pageref{LastPage}}}
@@ -37,7 +37,7 @@
 \social[linkedin]{mizadri}                        % optional, remove / comment the line if not wanted
 %\social[twitter]{jdoe}                             % optional, remove / comment the line if not wanted
 \social[github]{mizadri}                              % optional, remove / comment the line if not wanted
-%\extrainfo{additional information}                 % optional, remove / comment the line if not wanted
+\extrainfo{\textifsymbol{18} Amsterdam, Netherlands}                 % optional, remove / comment the line if not wanted
 %\photo[64pt][0.4pt]{carnet}                       % optional, remove / comment the line if not wanted; '64pt' is the height the picture must be resized to, 0.4pt is the thickness of the frame around it (put it to 0pt for no frame) and 'picture' is the name of the picture file
 %\quote{Some quote}                                 % optional, remove / comment the line if not wanted
 
@@ -58,7 +58,7 @@
 %-----       resume       ---------------------------------------------------------
 \makecvtitle
 
-\section{Description} I am a highly curious and passion driven individual that is always looking to grow as a professional and as a person. My dream job offers interesting technical challenges that are faced through teamwork and where the software we create actually makes a difference. Specially interested in diving into the Machine Learning and Security fields where I hope to transfer my researching skills to create great products.
+\section{Description} I am a highly curious and passion driven individual that is always looking to grow as a professional and as a person. My dream job offers interesting technical challenges that are faced through teamwork and where the software we create actually makes a difference. Specially interested in diving into the Machine Learning and Security fields.
 
 \section{Education}
 %\cventry{year--year}{Degree}{Institution}{City}{\textit{Grade}}{Description}  % arguments 3 to 6 can be left empty
@@ -76,16 +76,16 @@
 
 \section{Research articles}
 \begin{itemize}
-\item Garcia-Garcia, A., Saez, J.C., Prieto, M.: “Contention-Aware Fair Scheduling for Asymmetric Single-ISA Multicore Systems”. IEEE Transactions on Computers, 67 (12): 1703-1719. (2018). IF (JCR): 3.131. ISSN: 0018-9340; DOI: 10.1109/TC.2018.2836418. Impact index of \textbf{JCR Q1} by Computer Science, Hardware and Architecture (2018).
+\item Garcia-Garcia, et al..: “Contention-Aware Fair Scheduling for Asymmetric Single-ISA Multicore Systems”. IEEE Transactions on Computers. Index \textbf{JCR Q1}(2018).
 \smallskip
-\item Presented this article in the ICPP 2019 that took place in Kyoto: Garcia-Garcia, A., Saez, J.C., Castro, F. Prieto-Matias, M.: “LFOC: A Lightweight Fairness-Oriented Cache Clustering Policy for Commodity Multicores”. In Proceedings of the 48th International Conference on Parallel Processing (ICPP '19): 14:1-14:10. (2019).  ISBN: 978-1-4503-6295-5; DOI: 10.1145/3337821.3337925. \textbf{Ranked Class II} in GII-GRIN-SCIE (2018)
+\item Presented this article in the ICPP 2019 that took place in Kyoto: Garcia-Garcia, A. et al.: “LFOC: A Lightweight Fairness-Oriented Cache Clustering Policy for Commodity Multicores”. \textbf{Ranked Class II} in GII-GRIN-SCIE (2018)
 \smallskip
-\item Garcia-Garcia, A., Saez, J.C., Risco-Martin, J.L., Prieto, M.. “PBBCache: An open-source parallel simulator for rapid prototyping and evaluation of cache-partitioning and cache-clustering policies”. Journal of Computational Science, 42:101102, 2020. https://doi.org/10.1016/j.jocs.2020.101102. Impact index of \textbf{JCR Q1} by Computer Science, Theory and Methods (2020). Available on https://github.com/pbbcache/cachesim
+\item Garcia-Garcia, et al. “PBBCache: An open-source parallel {\color{blue}\href{https://github.com/pbbcache/cachesim}{simulator}} for rapid prototyping and evaluation of cache-partitioning and cache-clustering policies”. Journal of Computational Science, Index \textbf{JCR Q1} (2020).
 \end{itemize}
 
 
 \section{Achievements}
-\cventry{December, 2021}{Obtained my PhD with cum laude mention}{}{}{}{}
+\cventry{Dec., 2021}{Awarded cum laude mention in my PhD presentation}{}{}{}{}
 \cventry{June, 2016}{Graduated with special mention in the Final Project of my Bachelor's Degree}{}{}{}{}
 \cventry{2011--2016}{Subjects passed with honors on the Bachelor's Degree in Computer Science Engineering}{}{}{}{Operating Systems, Advanced Operating Systems and Networks, Computer Architecture, Linux and Android Internals, Computer Networks Security, Mobile and multicore parallel programming, Databases and Evaluation of Computer Systems}
 
