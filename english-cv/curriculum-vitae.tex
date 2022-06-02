@@ -63,17 +63,32 @@
 \section{Education}
 %\cventry{year--year}{Degree}{Institution}{City}{\textit{Grade}}{Description}  % arguments 3 to 6 can be left empty
 \cventry{2017--2021}{PhD in Computer Science Engineering}{Complutense University of Madrid}{}{\textit{cum laude mention} {\color{blue}\href{https://drive.google.com/file/d/1WwCfr2Mp8xMYrpEOq5sLz3ep9YLhmNLN/view?usp=sharing}{Thesis manuscript}}}{}
-\cventry{2016--2018}{Master's Degree in Computer Science Engineering}{Complutense University of Madrid}{}{\textit{Current average: 9,12.} {\color{blue}\href{https://drive.google.com/open?id=0B0Q9HPrQCrfgNFNnQnNJeVNxT00}{Academic Report}}}{}
-\cventry{2011--2016}{Bachelor's Degree in Computer Science Engineering}{Complutense University of Madrid}{}{\textit{Average: 7,82 over 10.} {\color{blue}\href{https://drive.google.com/open?id=0B0Q9HPrQCrfgUzllSEpXd1BSLWc}{Academic Report}}}{} % arguments 3 to 6 can be left empty
+\cventry{2016--2018}{Master's Degree in Computer Science Engineering}{Complutense University of Madrid}{}{\textit{GPA: 8.9} {\color{blue}\href{https://drive.google.com/file/d/1ERq82AQTt_a4ZzHNHYAhA6NGVDSN3vUY/view?usp=sharing}{Academic Report}}}{}
+\cventry{2011--2016}{Bachelor's Degree in Computer Science Engineering}{Complutense University of Madrid}{}{\textit{GPA: 7.82} {\color{blue}\href{https://drive.google.com/file/d/1A-z_gX6cm1vOZFw0x992D8rNEItV79Wk/view?usp=sharing}{Academic Report}}}{} % arguments 3 to 6 can be left empty
 
 \section{Employment history}
 % \cventry{year--year}{Job title}{Employer}{City}{}{Description line 1\newline{}Description line 2}
-\cventry{Mar'22-Now}{Backend Software Developer}{MonetDB Solutions}{Amsterdam}{}{Benchmarked MonetDB columnar database versus other relevant DBMS like Postgres, MySQL or Clickhouse, rewritting SQL queries to adapt to different syntaxes and optimize performance. Also measured the overhead of different DBMS when running on top of docker.}
-\cventry{Apr'18-Dec'21}{PhD scolarship (UCM)}{Department of Computer Architecture and Automatics}{Madrid}{}{Optimizing fairness and performance through scheduling and cache partitioning in Linux kernel modules. To compare different partitioning algorithms, we proposed an open-source simulator that seeks the optimal cache partitioning solution leveraging an ad-hoc B\&B algorithm and ipyparallel/sklearn.}.
-\cventry{Oct'17-Oct'18}{System Administrator}{UCM: Department of Compuer Architecture and Automatics}{Madrid}{}{Administrated multiple Linux systems and maintained the physical and virtualized infraestructure (kvm).}
-\cventry{Nov'16-Jun'17}{Collaboration fellowship by Spanish MECD}{Seven months researching and working for the Department of Computer Architecture and Automatics}{}{Madrid}{}{}
-\cventry{Apr'16-Aug'16}{Internship in Software Developement}{SATEC}{Madrid}{}{Developed web applications in C\# (.NET MVC), Razor and jQuery UI. Specifically, I contributed to build a web application for the government car management system.}
-
+\cventry{Mar'22-Now}{Backend Software Developer}{MonetDB Solutions}{Amsterdam}{}{
+\begin{itemize}
+\item Detected memory leaks by benchmarking our columnar database with industry standard TPCH. 
+\smallskip
+\item Compared performance versus other DBMS like Postgres, MySQL, sqlite3 or Clickhouse, rewritting SQL queries to adapt to different syntaxes.
+\smallskip
+\item Assessed the overhead of different DBMS when running on top of docker, configuring automatic testing and deployment (\texttt{docker-compose}).
+\end{itemize}}
+\cventry{Apr'18-Dec'21}{PhD scolarship (UCM)}{Department of Computer Architecture and Automatics}{Madrid}{}{
+\begin{itemize}
+\item Improved the interaction between the operating system (Linux) and emergent architectures through scheduling and cache partitioning.
+\smallskip
+\item Proposed an open-source simulator that seeks the optimal cache partitioning solution leveraging an ad-hoc B\&B algorithm and pandas/ipyparallel/sklearn.
+\end{itemize}}
+\cventry{Oct'17-Oct'18}{System Administrator}{UCM: Department of Compuer Architecture and Automatics}{Madrid}{}{\begin{itemize}
+\item Installed and configured Linux systems, maintaining the physical and virtualized infraestructure (kvm).
+\smallskip
+\item Provided support through ticket system and responded to security incidents.
+\end{itemize}}
+\cventry{Nov'16-Jun'17}{Collaboration fellowship by Spanish MECD (DACYA)}{Analyzed runtime metrics with pandas and explored visualizations with matplotlib in Jupyther Notebooks. Also employed WEKA to assess methods of estimating the Slowdown that threads suffer from sharing the system.}{}{}{}{}
+\cventry{Apr'16-Aug'16}{Internship in Software Developement}{SATEC}{Madrid}{}{Help to build a web application for the government car management system. Developing in C\# (.NET MVC), Razor and jQuery UI.}
 \section{Research articles}
 \begin{itemize}
 \item Garcia-Garcia, et al..: “Contention-Aware Fair Scheduling for Asymmetric Single-ISA Multicore Systems”. IEEE Transactions on Computers. Index \textbf{JCR Q1}(2018).
